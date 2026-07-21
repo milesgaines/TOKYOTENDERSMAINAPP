@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tokyo Tenders</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body { height: 100%; }
+
+    body {
+      background: #0c0c0c;
+      height: 100dvh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      font-family: 'Inter', sans-serif;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    /* grain texture */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23g)' opacity='0.055'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    /* ── Header ── */
+    header {
+      text-align: center;
+      padding: clamp(20px, 5vh, 40px) 20px 0;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      font-size: clamp(0.55rem, 1.8vw, 0.65rem);
+      font-weight: 600;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      color: #FF5500;
+      margin-bottom: 6px;
+    }
+
+    .wordmark {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.8rem, 14vw, 8rem);
+      letter-spacing: 0.06em;
+      line-height: 0.9;
+      color: #fff;
+    }
+
+    .wordmark span { color: #FF5500; }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 0;
+    }
+
+    .glow-ring {
+      position: absolute;
+      width: 80%;
+      height: 50%;
+      background: radial-gradient(ellipse, rgba(255, 80, 0, 0.14) 0%, transparent 65%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .hero img {
+      position: relative;
+      z-index: 1;
+      width: min(600px, 94vw);
+      max-height: 52dvh;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 20px 60px rgba(255, 70, 0, 0.22));
+    }
+
+    /* ── Footer ── */
+    footer {
+      padding: 0 20px clamp(24px, 5vh, 44px);
+      text-align: center;
+    }
+
+    .rule {
+      width: 28px;
+      height: 2px;
+      background: #FF5500;
+      margin: 0 auto 16px;
+      border-radius: 2px;
+    }
+
+    .city {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(0.8rem, 2.5vw, 1rem);
+      letter-spacing: 0.45em;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 12px;
+    }
+
+    .links {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .links a {
+      font-size: clamp(0.8rem, 3.5vw, 0.88rem);
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      color: rgba(255,255,255,0.38);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .links a:hover, .links a:active { color: #FF5500; }
+
+    .sep { display: none; }
+
+    @media (min-width: 480px) {
+      .links { flex-direction: row; gap: 18px; }
+      .sep {
+        display: block;
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.15);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="eyebrow">Pacoima, CA</div>
+    <div class="wordmark">Tokyo <span>Tenders</span></div>
+  </header>
+
+  <div class="hero">
+    <div class="glow-ring"></div>
+    <img src="coming soon.png" alt="Tokyo Tenders — Coming Soon" />
+  </div>
+
+  <footer>
+    <div class="rule"></div>
+    <div class="city">Pacoima &nbsp;·&nbsp; California</div>
+    <div class="links">
+      <a href="tel:8187292929">(818) 729-2929</a>
+      <div class="sep"></div>
+      <a href="mailto:tokyotenders@gmail.com">tokyotenders@gmail.com</a>
+    </div>
+  </footer>
+
+</body>
+</html>

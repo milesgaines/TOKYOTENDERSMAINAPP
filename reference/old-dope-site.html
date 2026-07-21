@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Tokyo Tenders</title>
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --og:#FF6B00;--og2:#FF8C00;--red:#CC0000;
+      --white:#ffffff;--bg:#FAFAFA;--card:#ffffff;
+      --border:rgba(0,0,0,0.06);
+      --text:#111;--sub:#444;--light:#555;
+      --safe-b:env(safe-area-inset-bottom,0px);
+      --radius:14px;
+    }
+    html{scroll-behavior:smooth;overflow-x:hidden}
+    body{
+      background:var(--bg);color:var(--text);
+      font-family:'Rajdhani',sans-serif;
+      -webkit-tap-highlight-color:transparent;
+      -webkit-font-smoothing:antialiased;
+      overflow-x:hidden;padding-bottom:68px;
+    }
+
+    /* SCROLL PROGRESS BAR */
+    .scroll-progress{
+      position:fixed;top:0;left:0;height:3px;z-index:9998;
+      background:var(--og);width:0;
+      transition:width .05s linear;
+      pointer-events:none;
+    }
+
+    /* LOADER */
+    #loader{
+      position:fixed;inset:0;z-index:9999;background:#fff;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+    }
+    .ld-logo{height:140px;animation:ldPulse .6s ease-in-out infinite alternate}
+    @keyframes ldPulse{from{transform:scale(1)}to{transform:scale(1.06)}}
+    .ld-bar-wrap{width:120px;height:3px;background:#eee;border-radius:3px;overflow:hidden}
+    .ld-bar{height:100%;border-radius:3px;background:var(--og);animation:ldFill .8s ease-out forwards}
+    @keyframes ldFill{0%{width:0}100%{width:100%}}
+
+    /* TOP BAR */
+    .topbar{
+      position:fixed;top:0;left:0;right:0;z-index:500;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0 18px;height:54px;
+      background:transparent;backdrop-filter:none;
+      transition:background .3s,backdrop-filter .3s,box-shadow .3s;
+    }
+    .topbar.scrolled{
+      background:rgba(255,255,255,0.88);backdrop-filter:blur(28px) saturate(1.6);
+      box-shadow:0 1px 8px rgba(0,0,0,0.04);
+    }
+    .topbar-brand{display:flex;align-items:center;gap:8px;text-decoration:none}
+    .topbar-brand img{height:30px;object-fit:contain}
+    .topbar-brand span{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:3px;color:#fff;transition:color .3s}
+    .topbar.scrolled .topbar-brand span{color:var(--og)}
+    .topbar-order{
+      background:transparent;color:#fff;border:2px solid rgba(255,255,255,0.35);
+      padding:8px 20px;border-radius:50px;cursor:pointer;
+      font-family:'Bebas Neue',sans-serif;font-size:.82rem;
+      letter-spacing:2px;text-decoration:none;font-weight:700;
+      transition:all .2s cubic-bezier(.2,.9,.3,1);
+    }
+    .topbar-order:hover{background:var(--og);border-color:var(--og);color:#fff}
+    .topbar-order:active{transform:scale(.92)}
+    .topbar.scrolled .topbar-order{color:var(--og);border-color:var(--og)}
+    .topbar.scrolled .topbar-order:hover{background:var(--og);color:#fff}
+    .topbar-nav{display:none;list-style:none;gap:22px;align-items:center}
+    .topbar-nav a{color:rgba(255,255,255,0.85);text-decoration:none;font-size:.85rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;transition:color .3s}
+    .topbar.scrolled .topbar-nav a{color:var(--sub)}
+    .topbar-nav a:hover{color:var(--og)}
+
+    /* BOTTOM TAB BAR */
+    .tab-bar{
+      position:fixed;bottom:0;left:0;right:0;z-index:600;
+      display:flex;align-items:stretch;justify-content:space-around;
+      height:calc(60px + var(--safe-b));padding-bottom:var(--safe-b);
+      background:rgba(255,255,255,0.92);backdrop-filter:blur(28px) saturate(1.6);
+      box-shadow:0 -1px 10px rgba(0,0,0,0.04);
+    }
+    .tab-bar a{
+      flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+      text-decoration:none;color:var(--light);
+      font-size:.72rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+      transition:color .2s;
+    }
+    .tab-bar a.active{color:var(--og)}
+    .tab-bar a.active .tab-icon::after{
+      content:'';position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);
+      width:4px;height:4px;border-radius:50%;background:var(--og);
+      animation:tabDotIn .25s cubic-bezier(.2,.9,.3,1);
+    }
+    .tab-icon{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;position:relative}
+    @keyframes tabDotIn{from{transform:translateX(-50%) scale(0)}to{transform:translateX(-50%) scale(1)}}
+    .tab-bar a:active{transform:scale(.88);transition:transform .1s cubic-bezier(.2,.9,.3,1)}
+    @media(min-width:900px){.tab-bar{display:none}body{padding-bottom:0}}
+
+    /* HERO */
+    #hero{
+      position:relative;min-height:70vh;min-height:70dvh;
+      display:flex;align-items:center;justify-content:center;overflow:hidden;
+      background:#0a0a0a;
+    }
+    .hero-bg{position:absolute;inset:0}
+    .hero-bg img{width:100%;height:100%;object-fit:cover;object-position:center 35%;opacity:.18}
+    .hero-bg-truck{
+      position:absolute;inset:0;z-index:1;pointer-events:none;
+    }
+    .hero-bg-truck img{
+      position:absolute;right:-8%;bottom:0;width:65%;max-width:700px;height:auto;
+      object-fit:contain;opacity:.2;
+      -webkit-mask-image:linear-gradient(to right,transparent 5%,black 50%);
+      mask-image:linear-gradient(to right,transparent 5%,black 50%);
+      filter:drop-shadow(0 0 60px rgba(255,107,0,0.15));
+    }
+    .hero-overlay{
+      position:absolute;inset:0;z-index:2;
+      background:
+        linear-gradient(135deg,rgba(255,107,0,0.2) 0%,rgba(204,0,0,0.08) 30%,transparent 55%),
+        linear-gradient(320deg,rgba(0,0,0,0.5) 0%,transparent 60%),
+        linear-gradient(180deg,rgba(0,0,0,0.15) 0%,transparent 40%,transparent 70%,rgba(250,250,250,1) 100%);
+    }
+    .hero-content{
+      position:relative;z-index:5;text-align:center;
+      padding:0 24px 48px;width:100%;display:flex;flex-direction:column;align-items:center;
+    }
+    .hero-badge{
+      display:inline-flex;align-items:center;gap:8px;
+      background:rgba(255,255,255,0.1);backdrop-filter:blur(16px) saturate(1.4);
+      color:#fff;font-size:.72rem;font-weight:800;
+      letter-spacing:4px;text-transform:uppercase;
+      padding:8px 20px;border-radius:100px;margin-bottom:24px;
+      border:1px solid rgba(255,255,255,0.12);
+    }
+    .hero-badge::before{content:'';width:6px;height:6px;background:var(--og);border-radius:50%;animation:badgePulse 1.5s ease-in-out infinite}
+    @keyframes badgePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.6)}}
+    .hero-logo{
+      width:clamp(140px,32vw,280px);height:auto;
+      filter:drop-shadow(0 10px 50px rgba(255,107,0,0.3)) drop-shadow(0 4px 16px rgba(0,0,0,0.5));
+      margin-bottom:24px;
+    }
+    .hero-desc{font-size:1.1rem;color:rgba(255,255,255,0.8);margin-bottom:32px;max-width:400px;line-height:1.6;letter-spacing:.5px}
+    .hero-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+    .hero-socials{display:flex;gap:14px;justify-content:center;margin-top:20px}
+    .hero-soc-btn{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.18);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.8);text-decoration:none;transition:background .15s,transform .15s}
+    .hero-soc-btn:hover{background:var(--og);color:#fff;transform:scale(1.1);border-color:transparent}
+    .btn-fill{
+      background:var(--og);color:#fff;padding:16px 38px;
+      font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:3px;
+      border:none;border-radius:50px;cursor:pointer;
+      text-decoration:none;display:inline-flex;align-items:center;gap:8px;font-weight:700;
+      box-shadow:0 4px 20px rgba(255,107,0,0.25);transition:transform .15s cubic-bezier(.2,.9,.3,1),box-shadow .15s;
+    }
+    .btn-fill:active{transform:scale(.93);box-shadow:0 2px 10px rgba(255,107,0,0.2)}
+    .btn-outline{
+      background:rgba(255,255,255,0.1);backdrop-filter:blur(12px);color:#fff;padding:16px 38px;
+      font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:3px;
+      border:1px solid rgba(255,255,255,0.18);border-radius:50px;
+      cursor:pointer;text-decoration:none;display:inline-block;transition:all .15s cubic-bezier(.2,.9,.3,1);
+    }
+    .btn-outline:active{transform:scale(.93);background:rgba(255,255,255,0.18)}
+
+    /* TICKER */
+    .ticker{background:var(--og);overflow:hidden;padding:11px 0;white-space:nowrap}
+    .ticker-inner{display:inline-block;animation:tickScroll 22s linear infinite}
+    .ticker-inner span{font-family:'Bebas Neue',sans-serif;font-size:.88rem;letter-spacing:3px;color:#fff;margin:0 12px;font-weight:700}
+    .ticker-inner .sep{color:rgba(255,255,255,0.5);margin:0 10px;font-size:1.1rem}
+    @keyframes tickScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+
+
+    /* SECTIONS */
+    section{padding:60px 20px}
+    .sec-lbl{font-size:.82rem;font-weight:800;letter-spacing:5px;text-transform:uppercase;color:var(--og);margin-bottom:8px}
+    .sec-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.6rem,10vw,5rem);line-height:.9;color:var(--text)}
+    .sec-div{width:50px;height:3px;border-radius:3px;background:var(--og);margin:14px 0 28px}
+
+    /* MENU */
+    #menu{background:#fff}
+    .menu-wrap{max-width:1200px;margin:0 auto}
+    .menu-hdr{text-align:center}
+    .menu-hdr .sec-div{margin:14px auto 32px}
+    .deal-card{
+      background:linear-gradient(135deg,rgba(255,107,0,0.06),rgba(255,107,0,0.02));
+      border:2px solid rgba(255,107,0,0.15);border-radius:20px;
+      padding:26px 24px;display:flex;align-items:center;gap:20px;
+      margin-bottom:36px;position:relative;overflow:hidden;cursor:pointer;
+      box-shadow:0 4px 16px rgba(255,107,0,0.08);
+      transition:all .2s cubic-bezier(.2,.9,.3,1);
+    }
+    .deal-card:hover{border-color:var(--og);box-shadow:0 6px 24px rgba(255,107,0,0.16)}
+    .deal-card:active{transform:scale(.97)}
+    .deal-ribbon{position:absolute;top:10px;right:-34px;background:var(--red);color:#fff;font-size:.48rem;font-weight:800;letter-spacing:2px;padding:3px 44px;transform:rotate(45deg)}
+    .deal-price{font-family:'Bebas Neue',sans-serif;font-size:3rem;color:var(--og);line-height:1;flex-shrink:0}
+    .deal-price sup{font-size:1.2rem;vertical-align:top}
+    .deal-info h3{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--text);margin-bottom:3px}
+    .deal-info p{color:var(--sub);font-size:.9rem;line-height:1.4}
+
+    .menu-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+    .mcard{
+      background:var(--card);border:none;
+      border-radius:16px;padding:0;position:relative;
+      cursor:pointer;transition:transform .15s cubic-bezier(.2,.9,.3,1),box-shadow .15s;
+      box-shadow:0 3px 12px rgba(0,0,0,0.08),0 1px 3px rgba(0,0,0,0.05);
+      overflow:hidden;display:flex;flex-direction:column;
+      min-height:280px;
+    }
+    .mcard:active{transform:scale(.97);box-shadow:0 2px 6px rgba(0,0,0,0.07)}
+    .mcard:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,0.13),0 2px 6px rgba(0,0,0,0.07)}
+    .mcard-img{width:100%;aspect-ratio:1/1;overflow:hidden;background:linear-gradient(135deg,rgba(255,107,0,0.15),rgba(255,107,0,0.05));flex-shrink:0;display:flex;align-items:center;justify-content:center}
+    .mcard-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s ease}
+    .mcard:hover .mcard-img img{transform:scale(1.07)}
+    .mcard-body{padding:12px 14px 16px;flex:1;display:flex;flex-direction:column;justify-content:flex-start}
+    .mcard-cat{font-size:.65rem;font-weight:800;letter-spacing:2px;color:var(--og);text-transform:uppercase;margin-bottom:2px}
+    .mcard h3{font-family:'Bebas Neue',sans-serif;font-size:1.15rem;letter-spacing:1px;color:var(--text);margin-bottom:3px;line-height:1.1}
+    .mcard p{color:var(--sub);font-size:.78rem;line-height:1.45;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .mcard-price{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--og);margin-top:auto}
+    .mcard-tag{position:absolute;top:9px;right:9px;background:rgba(255,107,0,0.92);color:#fff;font-size:.58rem;font-weight:800;letter-spacing:2px;padding:4px 10px;border-radius:50px;z-index:2}
+    .menu-cta{text-align:center;margin-top:40px;position:relative;z-index:5}
+    .menu-cta a{
+      display:inline-flex;align-items:center;gap:10px;
+      background:#111;color:#fff;padding:16px 44px;
+      border-radius:50px;text-decoration:none;
+      font-family:'Bebas Neue',sans-serif;font-size:1.05rem;
+      letter-spacing:3px;font-weight:700;
+      border:2px solid #111;
+      box-shadow:0 4px 20px rgba(0,0,0,0.15);
+      transition:all .2s cubic-bezier(.2,.9,.3,1);
+    }
+    .menu-cta a::after{content:'\2192';font-size:1.2rem;transition:transform .2s}
+    .menu-cta a:hover{background:transparent;color:#111}
+    .menu-cta a:hover::after{transform:translateX(4px)}
+    .menu-cta a:active{transform:scale(.93)}
+
+    /* FOOD PHOTO */
+    #foodshot{position:relative;height:30vh;min-height:180px;overflow:hidden}
+    #foodshot img{width:100%;height:100%;object-fit:cover}
+    #foodshot::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,#fff 0%,transparent 20%,transparent 80%,var(--bg) 100%)}
+
+    /* VIBE */
+    #vibe{background:var(--bg);text-align:center;position:relative;overflow:hidden}
+    .vibe-bg-txt{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Bebas Neue',sans-serif;font-size:28vw;color:rgba(255,107,0,0.04);white-space:nowrap;pointer-events:none}
+    .vibe-wrap{max-width:600px;margin:0 auto;position:relative;z-index:2}
+    .vibe-quote{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,6vw,3.5rem);line-height:1.15;color:var(--text);margin-bottom:16px}
+    .vibe-quote em{color:var(--og);font-style:normal}
+    .vibe-body{color:var(--sub);font-size:1rem;max-width:420px;margin:0 auto;line-height:1.7}
+    .vibe-pills{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:24px}
+    .pill{background:#fff;border:none;padding:9px 18px;border-radius:100px;font-size:.78rem;font-weight:800;letter-spacing:2px;color:var(--light);box-shadow:0 1px 5px rgba(0,0,0,0.06);transition:all .15s cubic-bezier(.2,.9,.3,1)}
+    .pill:active{background:rgba(255,107,0,0.06);color:var(--og);transform:scale(.93);box-shadow:0 1px 8px rgba(255,107,0,0.12)}
+
+    /* CONTACT */
+    #contact{background:#fff}
+    .contact-grid{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:1fr;gap:28px}
+    .contact-body .sec-div{margin-bottom:18px}
+    .contact-body>p{color:var(--sub);font-size:1rem;margin-bottom:20px;line-height:1.6}
+    .cinfo{display:flex;flex-direction:column;gap:10px}
+    .crow{
+      display:flex;gap:14px;align-items:center;
+      background:var(--card);border:none;
+      border-radius:16px;padding:16px 18px;cursor:pointer;
+      box-shadow:0 1px 6px rgba(0,0,0,0.05);
+      transition:transform .15s cubic-bezier(.2,.9,.3,1),box-shadow .15s;
+      text-decoration:none;color:inherit;
+    }
+    .crow:active{transform:scale(.96);box-shadow:0 0 3px rgba(0,0,0,0.03)}
+    .cicon{flex-shrink:0;width:34px;display:flex;align-items:center;justify-content:center;color:var(--og)}
+    .ctext-lbl{font-size:.7rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--og);margin-bottom:1px}
+    .ctext-val{font-size:.95rem;font-weight:600;color:var(--sub)}
+    .map-box{border-radius:18px;overflow:hidden;border:none;box-shadow:0 2px 12px rgba(0,0,0,0.06);aspect-ratio:16/10}
+    .map-box iframe{width:100%;height:100%;border:none}
+
+    /* FOOTER (desktop) */
+    footer{display:none;background:#fff;padding:28px 48px;justify-content:space-between;align-items:center;box-shadow:0 -1px 6px rgba(0,0,0,0.03)}
+    .foot-logo{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:4px;color:var(--og)}
+    .foot-copy{font-size:.78rem;color:var(--light)}
+    .foot-links{display:flex;gap:18px}
+    .foot-links a{color:var(--sub);text-decoration:none;font-size:.8rem;font-weight:600}
+
+    /* MODALS — shared sheet */
+    .sheet-overlay{display:none;position:fixed;inset:0;z-index:700;background:rgba(0,0,0,0.25);backdrop-filter:blur(8px);align-items:flex-end;justify-content:center}
+    .sheet-overlay.open{display:flex}
+    .sheet{background:#fff;border-radius:22px 22px 0 0;width:100%;max-width:480px;max-height:88vh;overflow-y:auto;position:relative;animation:sheetUp .35s cubic-bezier(.2,.9,.3,1)}
+    @keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+    .sheet-handle{width:36px;height:4px;background:rgba(0,0,0,0.1);border-radius:4px;margin:10px auto 0}
+    .sheet-close{position:absolute;top:12px;right:16px;background:var(--bg);border:none;width:32px;height:32px;border-radius:50%;color:var(--sub);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s cubic-bezier(.2,.9,.3,1)}
+    .sheet-close:active{transform:scale(.85);background:var(--og);color:#fff}
+    .sheet-body{padding:20px 24px 32px}
+    .sheet-title{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:2px;color:var(--text);margin-bottom:16px}
+
+    /* PROMO — centered modal */
+    .promo-overlay{display:none;position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0.65);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);align-items:center;justify-content:center;padding:20px}
+    .promo-overlay.open{display:flex}
+    .promo-sheet{width:100%;max-width:320px;background:rgba(15,15,15,0.80);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);border:1px solid rgba(255,255,255,0.12);border-radius:24px;overflow:hidden;animation:promoPopIn .45s cubic-bezier(.16,1,.3,1) both;box-shadow:0 24px 80px rgba(0,0,0,0.7)}
+    .promo-inner{position:relative}
+    .promo-x{position:absolute;top:12px;right:12px;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.1);border:none;color:rgba(255,255,255,0.7);font-size:.75rem;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:20;transition:background .15s;line-height:1}
+    .promo-x:hover{background:rgba(255,255,255,0.2)}
+    .promo-img-wrap{width:100%;height:200px;overflow:hidden}
+    .promo-img-wrap img{width:100%;height:100%;object-fit:cover;display:block}
+    .promo-body{padding:16px 24px 24px;text-align:center}
+    .promo-cs-label{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:6px;color:#fff;line-height:1;margin-bottom:6px}
+    .promo-location{font-size:.65rem;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.45);text-transform:uppercase;margin:0 0 20px}
+    .promo-skip{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.18);color:rgba(255,255,255,0.85);font-size:.72rem;font-family:'Bebas Neue',sans-serif;letter-spacing:3px;cursor:pointer;padding:11px 0;border-radius:12px;width:100%;display:block;transition:background .15s}
+    .promo-skip:hover{background:rgba(255,255,255,0.2)}
+    .promo-skip:active{opacity:.7}
+    @keyframes promoPopIn{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
+
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+    /* INFO SHEET */
+    .info-hours{list-style:none;margin:0 0 16px}
+    .info-hours li{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:1rem;color:var(--sub)}
+    .info-hours li .day{font-weight:700;color:var(--text)}
+    .info-hours li .hrs{color:var(--og);font-weight:600}
+    .info-actions{display:flex;flex-direction:column;gap:10px}
+    .info-action{display:flex;align-items:center;gap:14px;background:var(--card);border:none;border-radius:16px;padding:16px 18px;text-decoration:none;color:var(--text);box-shadow:0 1px 6px rgba(0,0,0,0.05);transition:transform .15s cubic-bezier(.2,.9,.3,1),box-shadow .15s}
+    .info-action:active{transform:scale(.96);box-shadow:0 0 3px rgba(0,0,0,0.03)}
+    .info-action .ia-icon{width:30px;display:flex;align-items:center;justify-content:center;color:var(--og)}
+    .info-action .ia-label{font-weight:700;font-size:.95rem}
+    .info-action .ia-sub{font-size:.8rem;color:var(--light)}
+
+    @media(min-width:540px){
+      .menu-grid{grid-template-columns:repeat(2,1fr);gap:18px}
+      .mcard-body{padding:14px 16px 18px}
+      .mcard h3{font-size:1.25rem}
+      .mcard p{font-size:.82rem}
+      section{padding:72px 28px}
+    }
+    @media(min-width:768px){
+      .menu-grid{grid-template-columns:repeat(3,1fr);gap:20px}
+      .mcard-img{aspect-ratio:4/3}
+      .mcard-body{padding:16px 18px 20px}
+      .mcard h3{font-size:1.35rem}
+      .mcard p{font-size:.86rem}
+    }
+    @media(min-width:900px){
+      .topbar{padding:0 48px;height:58px}
+      .topbar-nav{display:flex}
+      .hero-bg-truck img{right:-2%;width:55%;opacity:.22}
+      .hero-content{padding:0 60px 80px}
+      section{padding:90px 48px}
+      .menu-grid{grid-template-columns:repeat(4,1fr);gap:22px}
+      .contact-grid{grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+      .map-box{aspect-ratio:1}
+      footer{display:flex}
+      #foodshot{height:40vh}
+      .sheet{border-radius:22px;margin-bottom:5vh;max-width:440px;box-shadow:0 20px 60px rgba(0,0,0,0.1)}
+      @keyframes sheetUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+    }
+
+    /* ═══════════════════════════════════
+       STATS COUNTER
+       ═══════════════════════════════════ */
+    #stats{background:#0a0a0a;overflow:hidden;position:relative}
+    .stats-bg{position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,107,0,0.08) 0%,transparent 50%);pointer-events:none}
+    .stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;max-width:1000px;margin:0 auto;position:relative;z-index:2}
+    @media(min-width:600px){.stats-grid{grid-template-columns:repeat(4,1fr)}}
+    .stat-card{text-align:center;padding:20px 10px}
+    .stat-num{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.8rem,8vw,4.5rem);color:var(--og);line-height:1;letter-spacing:2px}
+    .stat-num span{display:inline}
+    .stat-label{font-size:.78rem;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:4px}
+
+    /* ═══════════════════════════════════
+       REVIEWS CAROUSEL
+       ═══════════════════════════════════ */
+    #reviews{background:#fff;overflow:hidden}
+    .reviews-wrap{max-width:1000px;margin:0 auto}
+    .reviews-hdr{text-align:center}
+    .reviews-hdr .sec-div{margin:14px auto 32px}
+    .reviews-track{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding:4px 0 20px;scrollbar-width:none}
+    .reviews-track::-webkit-scrollbar{display:none}
+    .rcard{
+      flex:0 0 85%;max-width:380px;scroll-snap-align:start;
+      background:var(--bg);border:none;padding:28px 24px;
+      border-radius:20px;position:relative;
+      box-shadow:0 4px 16px rgba(0,0,0,0.06);
+      transition:transform .2s cubic-bezier(.2,.9,.3,1);
+    }
+    @media(min-width:600px){.rcard{flex:0 0 45%}}
+    @media(min-width:900px){.rcard{flex:0 0 30%}}
+    .rcard:active{transform:scale(.97)}
+    .rcard-stars{color:var(--og);font-size:1.1rem;letter-spacing:2px;margin-bottom:10px}
+    .rcard-text{font-size:.95rem;line-height:1.7;color:var(--sub);font-style:italic;margin-bottom:14px}
+    .rcard-author{display:flex;align-items:center;gap:10px}
+    .rcard-avatar{width:36px;height:36px;border-radius:50%;background:var(--og);display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Bebas Neue',sans-serif;font-size:.9rem;font-weight:700}
+    .rcard-name{font-weight:800;font-size:.85rem;color:var(--text)}
+    .rcard-date{font-size:.72rem;color:var(--light)}
+    .rcard-src{font-size:.62rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--og);position:absolute;top:16px;right:18px}
+    .reviews-dots{display:flex;justify-content:center;gap:6px;margin-top:8px}
+    .reviews-dots .dot{width:8px;height:8px;border-radius:50%;background:var(--border);transition:background .2s,transform .2s}
+    .reviews-dots .dot.active{background:var(--og);transform:scale(1.3)}
+
+    /* ═══════════════════════════════════
+       PHOTO GALLERY CAROUSEL
+       ═══════════════════════════════════ */
+    #gallery{padding:0;overflow:hidden;background:var(--bg)}
+    .gallery-hdr{text-align:center;padding:60px 20px 24px}
+    .gallery-hdr .sec-div{margin:14px auto 0}
+    .carousel-wrap{position:relative;max-width:1200px;margin:0 auto;padding:0 20px}
+    .carousel-viewport{overflow:hidden;border-radius:20px;position:relative}
+    .carousel-track{display:flex;transition:transform .6s cubic-bezier(.25,.9,.3,1);will-change:transform}
+    .carousel-slide{
+      flex:0 0 100%;position:relative;aspect-ratio:16/9;overflow:hidden;
+    }
+    @media(min-width:600px){
+      .carousel-slide{flex:0 0 50%}
+    }
+    @media(min-width:900px){
+      .carousel-slide{flex:0 0 33.333%}
+    }
+    .carousel-slide img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
+    .carousel-slide:hover img{transform:scale(1.06)}
+    .carousel-overlay{
+      position:absolute;inset:0;
+      background:linear-gradient(to top,rgba(0,0,0,0.65) 0%,transparent 50%);
+      opacity:0;transition:opacity .3s;
+      display:flex;align-items:flex-end;padding:20px;
+    }
+    .carousel-slide:hover .carousel-overlay{opacity:1}
+    .carousel-caption{color:#fff;font-family:'Bebas Neue',sans-serif;font-size:1.15rem;letter-spacing:2px}
+    .carousel-controls{display:flex;justify-content:center;align-items:center;gap:16px;margin-top:20px;padding-bottom:30px}
+    .carousel-btn{
+      width:44px;height:44px;border-radius:50%;border:none;
+      background:var(--card);color:var(--text);
+      display:flex;align-items:center;justify-content:center;
+      cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,0.08);
+      transition:all .2s cubic-bezier(.2,.9,.3,1);
+    }
+    .carousel-btn:hover{background:var(--og);color:#fff;transform:scale(1.1);box-shadow:0 4px 20px rgba(255,107,0,0.3)}
+    .carousel-btn:active{transform:scale(.9)}
+    .carousel-dots{display:flex;gap:6px;align-items:center}
+    .carousel-dots .cdot{width:8px;height:8px;border-radius:50%;background:var(--border);cursor:pointer;transition:background .25s,transform .25s}
+    .carousel-dots .cdot.active{background:var(--og);transform:scale(1.4)}
+    .carousel-progress{position:absolute;bottom:0;left:0;height:3px;background:var(--og);border-radius:0 3px 0 0;z-index:5;transition:width .1s linear}
+
+    /* ═══════════════════════════════════
+       FLOATING SOCIALS (desktop)
+       ═══════════════════════════════════ */
+    .social-float{
+      position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:550;
+      display:none;flex-direction:column;gap:10px;
+    }
+    @media(min-width:900px){.social-float{display:flex}}
+    .sf-btn{
+      width:42px;height:42px;border-radius:50%;
+      background:rgba(255,255,255,0.9);backdrop-filter:blur(12px);
+      border:none;display:flex;align-items:center;justify-content:center;
+      color:var(--sub);cursor:pointer;
+      box-shadow:0 2px 12px rgba(0,0,0,0.08);
+      transition:all .2s cubic-bezier(.2,.9,.3,1);
+      text-decoration:none;
+    }
+    .sf-btn:hover{background:var(--og);color:#fff;transform:scale(1.15);box-shadow:0 4px 20px rgba(255,107,0,0.3)}
+
+    /* ═══════════════════════════════════
+       BACK TO TOP
+       ═══════════════════════════════════ */
+    .btt{
+      position:fixed;bottom:80px;right:16px;z-index:590;
+      width:44px;height:44px;border-radius:50%;
+      background:var(--og);border:none;
+      color:#fff;font-size:1.2rem;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;
+      box-shadow:0 4px 20px rgba(255,107,0,0.3);
+      opacity:0;transform:translateY(20px);
+      transition:opacity .3s,transform .3s cubic-bezier(.2,.9,.3,1);
+      pointer-events:none;
+    }
+    .btt.show{opacity:1;transform:translateY(0);pointer-events:auto}
+    .btt:active{transform:scale(.85)}
+    @media(min-width:900px){.btt{bottom:32px;right:24px}}
+
+    /* ═══════════════════════════════════
+       SCROLL REVEAL
+       ═══════════════════════════════════ */
+    .reveal{opacity:0;transform:translateY(40px);transition:opacity .7s cubic-bezier(.2,.9,.3,1),transform .7s cubic-bezier(.2,.9,.3,1)}
+    .reveal.visible{opacity:1;transform:translateY(0)}
+
+    /* ═══════════════════════════════════
+       SPICE-O-METER (interactive)
+       ═══════════════════════════════════ */
+    .spice-section{text-align:center;padding:40px 20px 0}
+    .spice-meter{display:flex;justify-content:center;gap:8px;margin:20px 0 10px;flex-wrap:wrap}
+    .spice-lvl{
+      padding:12px 22px;border-radius:50px;cursor:pointer;
+      font-family:'Bebas Neue',sans-serif;font-size:.9rem;letter-spacing:2px;
+      border:2px solid transparent;transition:all .25s cubic-bezier(.2,.9,.3,1);
+      position:relative;overflow:hidden;
+    }
+    .spice-lvl::before{content:'';position:absolute;inset:0;border-radius:50px;opacity:0;transition:opacity .3s}
+    .spice-lvl.mild{background:rgba(34,197,94,0.1);color:#22c55e;border-color:rgba(34,197,94,0.2)}
+    .spice-lvl.mild.active{background:#22c55e;color:#fff;box-shadow:0 4px 20px rgba(34,197,94,0.4);transform:scale(1.08)}
+    .spice-lvl.medium{background:rgba(255,200,0,0.1);color:#eab308;border-color:rgba(255,200,0,0.2)}
+    .spice-lvl.medium.active{background:#eab308;color:#000;box-shadow:0 4px 20px rgba(234,179,8,0.4);transform:scale(1.08)}
+    .spice-lvl.spicy{background:rgba(255,107,0,0.1);color:var(--og);border-color:rgba(255,107,0,0.2)}
+    .spice-lvl.spicy.active{background:var(--og);color:#fff;box-shadow:0 4px 20px rgba(255,107,0,0.4);transform:scale(1.08)}
+    .spice-lvl.fire{background:rgba(204,0,0,0.1);color:var(--red);border-color:rgba(204,0,0,0.2)}
+    .spice-lvl.fire.active{background:var(--red);color:#fff;box-shadow:0 4px 20px rgba(204,0,0,0.4);transform:scale(1.08);animation:fireShake .15s ease 3}
+    @keyframes fireShake{0%,100%{transform:scale(1.08) translateX(0)}25%{transform:scale(1.08) translateX(-3px)}75%{transform:scale(1.08) translateX(3px)}}
+    .spice-reaction{font-size:1.8rem;min-height:50px;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .3s}
+    .spice-text{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:3px;color:var(--sub)}
+
+    /* ═══════════════════════════════════
+       FOOTER UPGRADE
+       ═══════════════════════════════════ */
+    .foot-social{display:flex;gap:12px}
+    .foot-social a{
+      width:34px;height:34px;border-radius:50%;
+      background:rgba(255,107,0,0.1);
+      display:flex;align-items:center;justify-content:center;
+      color:var(--og);text-decoration:none;
+      transition:all .2s cubic-bezier(.2,.9,.3,1);
+    }
+    .foot-social a:hover{background:var(--og);color:#fff;transform:scale(1.1)}
+
+    /* SECTION DIVIDER ANIMATION */
+    .sec-div{width:0;transition:width .6s cubic-bezier(.2,.9,.3,1)}
+    .sec-div.animate{width:50px}
+
+  </style>
+</head>
+<body>
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- FLOATING SOCIAL SIDEBAR (desktop) -->
+<div class="social-float">
+  <a class="sf-btn" href="https://www.instagram.com/tokyotenders" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+  <a class="sf-btn" href="https://www.tiktok.com/@tokyotenders" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1v-3.52a6.37 6.37 0 0 0-.79-.05A6.34 6.34 0 0 0 3.15 15a6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.81a8.23 8.23 0 0 0 4.76 1.5v-3.4a4.85 4.85 0 0 1-1-.22z"/></svg></a>
+  <a class="sf-btn" href="https://www.yelp.com/biz/tokyo-tenders-pacoima" target="_blank" rel="noopener noreferrer" aria-label="Yelp"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12.7 2.4c-.4-.5-1.2-.4-1.8-.2L5.1 5.5c-.7.3-.9 1-.5 1.6l3.5 5.2c.3.4.8.5 1.2.3l2-.9c.5-.2.7-.7.5-1.2L8.3 4.8 12.7 2.4zm-.3 10.2l-2 .9c-.5.2-.7.7-.5 1.2l3.5 5.7c.3.5.9.7 1.4.4l4.6-2.3c.6-.3.8-1 .4-1.5l-6.2-4.7c-.3-.3-.8-.3-1.2-.1z"/></svg></a>
+</div>
+
+<!-- BACK TO TOP -->
+<button class="btt" id="bttBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
+  <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+</button>
+
+<!-- LOADER -->
+<div id="loader">
+  <img class="ld-logo" src="images/TENDERS LOGO.png" alt="TT" onerror="this.style.display='none'" />
+  <div class="ld-bar-wrap"><div class="ld-bar"></div></div>
+</div>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <a href="#hero" class="topbar-brand">
+    <img src="images/TENDERS LOGO.png" alt="Tokyo Tenders" onerror="this.style.display='none'" />
+    <span>TOKYO TENDERS</span>
+  </a>
+  <ul class="topbar-nav">
+    <li><a href="#hero">Home</a></li>
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#contact">Find Us</a></li>
+  </ul>
+  <a href="order.html" class="topbar-order">ORDER NOW</a>
+</div>
+
+<!-- BOTTOM TABS (mobile) -->
+<nav class="tab-bar" id="tabBar">
+  <a href="#hero" class="active" data-tab="home"><span class="tab-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>Home</a>
+  <a href="#menu" data-tab="menu"><span class="tab-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></span>Menu</a>
+  <a href="tel:8187292929" data-tab="call"><span class="tab-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6.08 6.08l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>Call</a>
+  <a href="#" data-tab="info" id="infoTabBtn"><span class="tab-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>Info</a>
+</nav>
+
+
+
+<!-- PROMO -->
+<div class="promo-overlay" id="promoOverlay">
+  <div class="promo-sheet">
+    <div class="promo-inner">
+      <button class="promo-x" id="promoClose" aria-label="Close">✕</button>
+      <div class="promo-img-wrap">
+        <img src="images/coming soon.png" alt="Coming Soon" />
+      </div>
+      <div class="promo-body">
+        <div class="promo-cs-label">COMING SOON</div>
+        <div class="promo-location">PACOIMA, CA · JUNE 2026</div>
+        <button class="promo-skip" id="promoSkip">CONTINUE ANYWAY</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- INFO SHEET -->
+<div class="sheet-overlay" id="infoSheet">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <button class="sheet-close" id="infoClose">&times;</button>
+    <div class="sheet-body">
+      <div class="sheet-title">INFO & HOURS</div>
+      <ul class="info-hours" id="infoHoursList">
+        <li><span class="day">Monday</span><span class="hrs">11am – 9pm</span></li>
+        <li><span class="day">Tuesday</span><span class="hrs">11am – 9pm</span></li>
+        <li><span class="day">Wednesday</span><span class="hrs">11am – 9pm</span></li>
+        <li><span class="day">Thursday</span><span class="hrs">11am – 9pm</span></li>
+        <li><span class="day">Friday</span><span class="hrs">11am – 10pm</span></li>
+        <li><span class="day">Saturday</span><span class="hrs">11am – 10pm</span></li>
+        <li><span class="day">Sunday</span><span class="hrs">11am – 8pm</span></li>
+      </ul>
+      <div class="info-actions">
+        <a class="info-action" href="tel:8187292929"><span class="ia-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span><div><div class="ia-label">Call Us</div><div class="ia-sub">(818) 729-2929</div></div></a>
+        <a class="info-action" href="https://maps.google.com/?q=13083+Van+Nuys+Blvd+Pacoima+CA+91331" target="_blank" rel="noopener noreferrer"><span class="ia-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span><div><div class="ia-label">Get Directions</div><div class="ia-sub">13083 Van Nuys Blvd, Pacoima CA</div></div></a>
+        <a class="info-action" href="mailto:tokyotenders@gmail.com"><span class="ia-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></span><div><div class="ia-label">Email Us</div><div class="ia-sub">tokyotenders@gmail.com</div></div></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"><img src="images/storefront.PNG" alt="Storefront" /></div>
+  <div class="hero-bg-truck"><img src="images/TRUCK.png" alt="Truck" /></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content" id="heroContent">
+    <div class="hero-badge" id="heroBadge">COMING SOON — PACOIMA, CA</div>
+    <img class="hero-logo" id="heroLogo" src="images/TENDERS LOGO.png" alt="Tokyo Tenders" />
+    <div class="hero-btns" id="heroBtns">
+      <a href="order.html" class="btn-fill" id="heroOrderBtn">ORDER NOW</a>
+      <a href="tel:8187292929" class="btn-outline">CALL US</a>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner" id="ticker">
+    <span>CRISPY AF</span><span class="sep">•</span>
+    <span>SPICY TENDERS</span><span class="sep">•</span>
+    <span>FRESH DAILY</span><span class="sep">•</span>
+    <span>GARLIC PEPPER</span><span class="sep">•</span>
+    <span>TOKYO CRUNCH SANDWICH</span><span class="sep">•</span>
+    <span>13083 VAN NUYS BLVD</span><span class="sep">•</span>
+    <span>(818) 729-2929</span><span class="sep">•</span>
+    <span>GRAND OPENING 2026</span><span class="sep">•</span>
+    <span>CRISPY AF</span><span class="sep">•</span>
+    <span>SPICY TENDERS</span><span class="sep">•</span>
+    <span>FRESH DAILY</span><span class="sep">•</span>
+    <span>GARLIC PEPPER</span><span class="sep">•</span>
+    <span>TOKYO CRUNCH SANDWICH</span><span class="sep">•</span>
+    <span>13083 VAN NUYS BLVD</span><span class="sep">•</span>
+    <span>(818) 729-2929</span><span class="sep">•</span>
+    <span>GRAND OPENING 2026</span><span class="sep">•</span>
+  </div>
+</div>
+
+
+
+<!-- STATS COUNTER -->
+<section id="stats">
+  <div class="stats-bg"></div>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-num"><span data-target="1" data-suffix="">0</span></div>
+      <div class="stat-label">Family Recipe</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num"><span data-target="24" data-suffix="hr">0</span></div>
+      <div class="stat-label">Marinated Fresh Daily</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num"><span data-target="12" data-suffix="">0</span></div>
+      <div class="stat-label">Signature Sauces</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num"><span data-target="100" data-suffix="%">0</span></div>
+      <div class="stat-label">Made With Love</div>
+    </div>
+  </div>
+</section>
+
+<!-- MENU -->
+<section id="menu">
+  <div class="menu-wrap">
+    <div class="menu-hdr">
+      <div class="sec-lbl">What We're Serving</div>
+      <h2 class="sec-title">THE <span style="color:var(--og)">MENU</span></h2>
+      <div class="sec-div"></div>
+    </div>
+    <div class="deal-card" onclick="location.href='order.html'">
+      <div class="deal-ribbon">GRAND OPENING</div>
+      <div class="deal-price"><sup>$</sup>9<small style="font-size:1.6rem">.99</small></div>
+      <div class="deal-info">
+        <h3>Tenders Special</h3>
+        <p>3 Crispy tenders · Golden fries · Signature dipping sauce</p>
+      </div>
+    </div>
+    <div class="menu-grid" id="menuGrid">
+      <!-- Populated dynamically from Square catalog -->
+    </div>
+    <div class="menu-cta"><a href="order.html">SEE FULL MENU & ORDER</a></div>
+  </div>
+</section>
+
+<!-- FOOD PHOTO -->
+<div id="foodshot">
+  <img src="images/menu.JPG" alt="Food" onerror="this.parentElement.style.display='none'" />
+</div>
+
+<!-- VIBE -->
+<section id="vibe">
+  <div class="vibe-bg-txt">TOKYO</div>
+  <div class="vibe-wrap">
+    <div class="vibe-quote">"We don't just fry chicken.<br>We craft <em>legends.</em>"</div>
+    <p class="vibe-body">Born in the streets, made with love in Pacoima.</p>
+    <div class="vibe-pills">
+      <span class="pill">CRISPY AF</span><span class="pill">LOCAL LOVE</span>
+      <span class="pill">FRESH DAILY</span><span class="pill">NEVER FROZEN</span>
+      <span class="pill">STREET VIBES</span><span class="pill">PACOIMA PROUD</span>
+    </div>
+
+    <!-- SPICE-O-METER -->
+    <div class="spice-section">
+      <div class="sec-lbl">How Hot Can You Go?</div>
+      <div class="spice-meter">
+        <button class="spice-lvl mild" onclick="setSpice(this,'mild')">MILD</button>
+        <button class="spice-lvl medium" onclick="setSpice(this,'medium')">MEDIUM</button>
+        <button class="spice-lvl spicy" onclick="setSpice(this,'spicy')">SPICY</button>
+        <button class="spice-lvl fire" onclick="setSpice(this,'fire')">TOKYO FIRE</button>
+      </div>
+      <div class="spice-text" id="spiceText"></div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS CAROUSEL -->
+<section id="reviews">
+  <div class="reviews-wrap">
+    <div class="reviews-hdr">
+      <div class="sec-lbl">What People Say</div>
+      <h2 class="sec-title">REAL <span style="color:var(--og)">REVIEWS</span></h2>
+      <div class="sec-div"></div>
+    </div>
+    <div class="reviews-track" id="reviewsTrack">
+      <div class="rcard">
+        <div class="rcard-src">YELP</div>
+        <div class="rcard-stars">★★★★★</div>
+        <div class="rcard-text">"Best chicken tenders I've ever had. The Tokyo Fire sauce literally changed my life. I'm not even exaggerating."</div>
+        <div class="rcard-author"><div class="rcard-avatar">M</div><div><div class="rcard-name">Marcus T.</div><div class="rcard-date">2 weeks ago</div></div></div>
+      </div>
+      <div class="rcard">
+        <div class="rcard-src">GOOGLE</div>
+        <div class="rcard-stars">★★★★★</div>
+        <div class="rcard-text">"The crunch is insane. Perfectly seasoned, juicy inside. The garlic pepper sauce is addictive. Already been back 3 times."</div>
+        <div class="rcard-author"><div class="rcard-avatar">S</div><div><div class="rcard-name">Sarah L.</div><div class="rcard-date">1 week ago</div></div></div>
+      </div>
+      <div class="rcard">
+        <div class="rcard-src">YELP</div>
+        <div class="rcard-stars">★★★★★</div>
+        <div class="rcard-text">"Family Box fed my whole crew. Fries are crispy, tenders are golden, sauces are fire. This spot is a game-changer for the Valley."</div>
+        <div class="rcard-author"><div class="rcard-avatar">J</div><div><div class="rcard-name">Jose R.</div><div class="rcard-date">3 days ago</div></div></div>
+      </div>
+      <div class="rcard">
+        <div class="rcard-src">GOOGLE</div>
+        <div class="rcard-stars">★★★★★</div>
+        <div class="rcard-text">"Drove 30 mins just for the Tokyo Crunch Sandwich and it was 100% worth it. The brioche bun + slaw + sauce combo is unreal."</div>
+        <div class="rcard-author"><div class="rcard-avatar">A</div><div><div class="rcard-name">Ashley K.</div><div class="rcard-date">5 days ago</div></div></div>
+      </div>
+      <div class="rcard">
+        <div class="rcard-src">INSTAGRAM</div>
+        <div class="rcard-stars">★★★★★</div>
+        <div class="rcard-text">"Pacoima's best kept secret. The spicy tenders with ranch is my go-to. Clean spot, fast service, and the vibes are immaculate."</div>
+        <div class="rcard-author"><div class="rcard-avatar">D</div><div><div class="rcard-name">Danny V.</div><div class="rcard-date">1 week ago</div></div></div>
+      </div>
+    </div>
+    <div class="reviews-dots" id="reviewsDots"></div>
+  </div>
+</section>
+
+<!-- PHOTO GALLERY CAROUSEL -->
+<section id="gallery">
+  <div class="gallery-hdr">
+    <div class="sec-lbl">The Vibe</div>
+    <h2 class="sec-title">THE <span style="color:var(--og)">GALLERY</span></h2>
+    <div class="sec-div"></div>
+  </div>
+  <div class="carousel-wrap">
+    <div class="carousel-viewport">
+      <div class="carousel-track" id="carouselTrack">
+        <div class="carousel-slide"><img src="images/menu/tenders-crispy.jpg" alt="Crispy Tenders" loading="lazy"><div class="carousel-overlay"><span class="carousel-caption">CRISPY TENDERS</span></div></div>
+        <div class="carousel-slide"><img src="images/menu/sandwich.jpg" alt="Tokyo Crunch" loading="lazy"><div class="carousel-overlay"><span class="carousel-caption">TOKYO CRUNCH</span></div></div>
+        <div class="carousel-slide"><img src="images/menu/combo.jpg" alt="Combo Meal" loading="lazy"><div class="carousel-overlay"><span class="carousel-caption">COMBO MEAL</span></div></div>
+        <div class="carousel-slide"><img src="images/menu/family-box.jpg" alt="Family Box" loading="lazy"><div class="carousel-overlay"><span class="carousel-caption">FAMILY BOX</span></div></div>
+        <div class="carousel-slide"><img src="images/menu/fries.jpg" alt="Golden Fries" loading="lazy"><div class="carousel-overlay"><span class="carousel-caption">GOLDEN FRIES</span></div></div>
+        <div class="carousel-slide"><img src="images/menu/lemonade.jpg" alt="Fresh Lemonade" loading="lazy"><div class="carousel-overlay"><span class="carousel-caption">FRESH LEMONADE</span></div></div>
+        <div class="carousel-slide"><img src="images/storefront.PNG" alt="The Spot" loading="lazy"><div class="carousel-overlay"><span class="carousel-caption">THE SPOT</span></div></div>
+        <div class="carousel-slide"><img src="images/TRUCK.png" alt="The Truck" loading="lazy"><div class="carousel-overlay"><span class="carousel-caption">THE TRUCK</span></div></div>
+      </div>
+      <div class="carousel-progress" id="carouselProgress"></div>
+    </div>
+    <div class="carousel-controls">
+      <button class="carousel-btn" id="carouselPrev" aria-label="Previous"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <div class="carousel-dots" id="carouselDots"></div>
+      <button class="carousel-btn" id="carouselNext" aria-label="Next"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg></button>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-grid">
+    <div class="contact-body">
+      <img src="images/TRUCK.png" alt="Tokyo Tenders Food Truck" style="max-width:280px;width:100%;margin-bottom:18px">
+      <div class="sec-lbl">Come Find Us</div>
+      <h2 class="sec-title">FIND<br><span style="color:var(--og)">THE FLOCK</span></h2>
+      <div class="sec-div"></div>
+      <div class="cinfo">
+        <a class="crow" href="https://maps.google.com/?q=13083+Van+Nuys+Blvd+Pacoima+CA+91331" target="_blank" rel="noopener noreferrer">
+          <div class="cicon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div><div class="ctext-lbl">Location</div><div class="ctext-val">13083 Van Nuys Blvd, Pacoima CA 91331</div></div>
+        </a>
+        <a class="crow" href="tel:8187292929">
+          <div class="cicon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div><div><div class="ctext-lbl">Phone</div><div class="ctext-val">(818) 729-2929</div></div>
+        </a>
+        <a class="crow" href="mailto:tokyotenders@gmail.com">
+          <div class="cicon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div><div><div class="ctext-lbl">Email</div><div class="ctext-val">tokyotenders@gmail.com</div></div>
+        </a>
+      </div>
+    </div>
+    <div class="map-box">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3301.2168!2d-118.4220!3d34.2742!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c2944d3b6a6b9b%3A0x0!2s13083+Van+Nuys+Blvd%2C+Pacoima%2C+CA+91331!5e0!3m2!1sen!2sus!4v1709680000000" title="Map" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-logo">TOKYO TENDERS</div>
+  <div class="foot-social">
+    <a href="https://www.instagram.com/tokyotenders" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+    <a href="https://www.tiktok.com/@tokyotenders" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1v-3.52a6.37 6.37 0 0 0-.79-.05A6.34 6.34 0 0 0 3.15 15a6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.81a8.23 8.23 0 0 0 4.76 1.5v-3.4a4.85 4.85 0 0 1-1-.22z"/></svg></a>
+    <a href="https://www.yelp.com/biz/tokyo-tenders-pacoima" target="_blank" rel="noopener noreferrer" aria-label="Yelp"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12.7 2.4c-.4-.5-1.2-.4-1.8-.2L5.1 5.5c-.7.3-.9 1-.5 1.6l3.5 5.2c.3.4.8.5 1.2.3l2-.9c.5-.2.7-.7.5-1.2L8.3 4.8 12.7 2.4zm-.3 10.2l-2 .9c-.5.2-.7.7-.5 1.2l3.5 5.7c.3.5.9.7 1.4.4l4.6-2.3c.6-.3.8-1 .4-1.5l-6.2-4.7c-.3-.3-.8-.3-1.2-.1z"/></svg></a>
+  </div>
+  <div class="foot-copy">&copy; 2026 Tokyo Tenders · Pacoima, CA</div>
+  <div class="foot-links"><a href="tel:8187292929">(818) 729-2929</a><a href="mailto:tokyotenders@gmail.com">Email</a></div>
+</footer>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+if('scrollRestoration' in history) history.scrollRestoration='manual';
+window.scrollTo(0,0);
+
+window.addEventListener('load',()=>{
+  window.scrollTo(0,0);
+  setTimeout(()=>{
+    gsap.to('#loader',{opacity:0,duration:.35,ease:'power2.in',onComplete:()=>{
+      document.getElementById('loader').style.display='none';
+      boot();
+    }});
+  },800);
+});
+
+/* Promo popup */
+setTimeout(function(){
+  if(!sessionStorage.getItem('tt_promo_v9')){
+    document.getElementById('promoOverlay').classList.add('open');
+  }
+},1500);
+function closePromo(){
+  document.getElementById('promoOverlay').classList.remove('open');
+  sessionStorage.setItem('tt_promo_v9','1');
+}
+document.getElementById('promoSkip').addEventListener('click',closePromo);
+document.getElementById('promoClose').addEventListener('click',closePromo);
+document.getElementById('promoOverlay').addEventListener('click',function(e){
+  if(e.target===this)closePromo();
+});
+
+document.getElementById('infoTabBtn').addEventListener('click',e=>{e.preventDefault();document.getElementById('infoSheet').classList.add('open')});
+document.getElementById('infoClose').addEventListener('click',()=>document.getElementById('infoSheet').classList.remove('open'));
+document.getElementById('infoSheet').addEventListener('click',e=>{if(e.target===document.getElementById('infoSheet'))document.getElementById('infoSheet').classList.remove('open')});
+
+function boot(){
+  const tl=gsap.timeline({defaults:{ease:'power4.out'}});
+  tl.from('#heroLogo',{opacity:0,scale:.8,duration:.6,ease:'back.out(1.4)'})
+    .from('#heroBtns',{opacity:0,y:12,duration:.25},'-=.2');
+
+
+  gsap.from('.mcard',{scrollTrigger:{trigger:'#menuGrid',start:'top 88%'},opacity:0,y:24,stagger:.05,duration:.3});
+  gsap.from('.vibe-quote',{scrollTrigger:{trigger:'#vibe',start:'top 80%'},opacity:0,y:24,duration:.5});
+  gsap.from('.pill',{scrollTrigger:{trigger:'.vibe-pills',start:'top 90%'},opacity:0,y:10,scale:.85,stagger:.03,duration:.25,ease:'back.out(1.7)'});
+
+  /* Stats counter animation */
+  gsap.from('.stat-card',{scrollTrigger:{trigger:'#stats',start:'top 85%'},opacity:0,y:30,stagger:.1,duration:.4,ease:'back.out(1.5)'});
+
+  /* Reviews cards */
+  gsap.from('.rcard',{scrollTrigger:{trigger:'#reviews',start:'top 85%'},opacity:0,x:40,stagger:.08,duration:.4,ease:'power3.out'});
+
+  /* Gallery carousel entrance */
+  gsap.from('.carousel-slide',{scrollTrigger:{trigger:'#gallery',start:'top 85%'},opacity:0,scale:.92,stagger:.08,duration:.4,ease:'back.out(1.3)'});
+
+  /* Fire up scroll reveals */
+  initScrollReveal();
+}
+
+/* ═══════════════════════════════════
+   SCROLL REVEAL
+   ═══════════════════════════════════ */
+function initScrollReveal(){
+  const obs=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}});
+  },{threshold:0.15});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+}
+
+/* ═══════════════════════════════════
+   STATS COUNTER ANIMATION
+   ═══════════════════════════════════ */
+let statsAnimated=false;
+const statsObs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting&&!statsAnimated){
+      statsAnimated=true;
+      document.querySelectorAll('.stat-num span[data-target]').forEach(el=>{
+        const target=parseFloat(el.dataset.target);
+        const decimals=parseInt(el.dataset.decimals||'0');
+        const suffix=el.dataset.suffix||'';
+        const duration=2000;
+        const start=performance.now();
+        function tick(now){
+          const elapsed=now-start;
+          const progress=Math.min(elapsed/duration,1);
+          /* Ease out cubic */
+          const eased=1-Math.pow(1-progress,3);
+          const current=eased*target;
+          el.textContent=(decimals>0?current.toFixed(decimals):Math.floor(current).toLocaleString())+suffix;
+          if(progress<1)requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+      });
+    }
+  });
+},{threshold:0.3});
+const statsEl=document.getElementById('stats');
+if(statsEl)statsObs.observe(statsEl);
+
+/* ═══════════════════════════════════
+   REVIEWS DOTS
+   ═══════════════════════════════════ */
+(function(){
+  const track=document.getElementById('reviewsTrack');
+  const dotsWrap=document.getElementById('reviewsDots');
+  if(!track||!dotsWrap)return;
+  const cards=track.querySelectorAll('.rcard');
+  cards.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='dot'+(i===0?' active':'');
+    dotsWrap.appendChild(d);
+  });
+  const dots=dotsWrap.querySelectorAll('.dot');
+  track.addEventListener('scroll',()=>{
+    const scrollLeft=track.scrollLeft;
+    const cardWidth=cards[0].offsetWidth+16;
+    const idx=Math.round(scrollLeft/cardWidth);
+    dots.forEach((d,i)=>d.classList.toggle('active',i===idx));
+  },{passive:true});
+})();
+
+/* ═══════════════════════════════════
+   SPICE-O-METER
+   ═══════════════════════════════════ */
+const spiceData={
+  mild:{label:'CHILL VIBES — PERFECT FOR THE FAINT OF HEART'},
+  medium:{label:'NOW WE\'RE TALKING — SOLID KICK'},
+  spicy:{label:'BRINGING THE HEAT — RESPECT'},
+  fire:{label:'TOKYO FIRE — YOU\'VE BEEN WARNED'}
+};
+function setSpice(btn,level){
+  document.querySelectorAll('.spice-lvl').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const data=spiceData[level];
+  const text=document.getElementById('spiceText');
+  text.textContent=data.label;
+}
+
+/* ═══════════════════════════════════
+   BACK TO TOP BUTTON
+   ═══════════════════════════════════ */
+const btt=document.getElementById('bttBtn');
+window.addEventListener('scroll',()=>{
+  btt.classList.toggle('show',window.scrollY>600);
+},{passive:true});
+
+const tabs=document.querySelectorAll('.tab-bar a[data-tab]');
+const sections=['hero','menu','vibe','contact'];
+function updateTabs(){
+  const y=window.scrollY+window.innerHeight/3;
+  let current='home';
+  sections.forEach(id=>{const el=document.getElementById(id);if(el&&el.offsetTop<=y)current=id==='hero'?'home':id==='contact'?'info':id});
+  tabs.forEach(t=>t.classList.toggle('active',t.dataset.tab===current));
+}
+window.addEventListener('scroll',updateTabs,{passive:true});
+
+/* Topbar scroll effect — smooth opacity */
+const topbar=document.querySelector('.topbar');
+function updateTopbar(){
+  const s=window.scrollY;
+  topbar.classList.toggle('scrolled',s>80);
+  /* Gradual backdrop blur ramp 0→80 */
+  const t=Math.min(s/80,1);
+  topbar.style.background='rgba(255,255,255,'+(.0+t*.92)+')';
+  topbar.style.backdropFilter=t>0?'blur('+(t*28)+'px) saturate('+(1+t*.6)+')':'none';
+  topbar.style.webkitBackdropFilter=topbar.style.backdropFilter;
+}
+window.addEventListener('scroll',updateTopbar,{passive:true});
+updateTopbar();
+
+/* ═══════════════════════════════════
+   SCROLL PROGRESS BAR
+   ═══════════════════════════════════ */
+const scrollProgress=document.getElementById('scrollProgress');
+function updateScrollProgress(){
+  const h=document.documentElement.scrollHeight-window.innerHeight;
+  const pct=h>0?(window.scrollY/h)*100:0;
+  scrollProgress.style.width=pct+'%';
+}
+window.addEventListener('scroll',updateScrollProgress,{passive:true});
+
+/* ═══════════════════════════════════
+   SECTION DIVIDER ANIMATIONS
+   ═══════════════════════════════════ */
+const divObs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(e.isIntersecting){e.target.classList.add('animate');divObs.unobserve(e.target)}
+  });
+},{threshold:0.5});
+document.querySelectorAll('.sec-div').forEach(function(d){divObs.observe(d)});
+
+/* ═══════════════════════════════════
+   MENU CARDS → ORDER
+   ═══════════════════════════════════ */
+document.getElementById('menuGrid').addEventListener('click',function(e){
+  const card=e.target.closest('.mcard');
+  if(card){
+    const name=card.querySelector('h3');
+    if(name)window.location.href='order.html?item='+encodeURIComponent(name.textContent);
+  }
+});
+/* Make cards feel tappable */
+const menuGridEl=document.getElementById('menuGrid');
+if(menuGridEl){
+  const style=document.createElement('style');
+  style.textContent='.mcard{cursor:pointer}.mcard:hover{box-shadow:0 8px 32px rgba(0,0,0,0.1)}';
+  document.head.appendChild(style);
+}
+
+/* ── Fetch store status from Square to sync hours and open/closed state ── */
+async function syncStoreStatus(){
+  try{
+    const res=await fetch('/api/store-status');
+    const data=await res.json();
+    /* Update info sheet hours from Square if available */
+    if(data.weekHours&&data.weekHours.length>0){
+      var dayMap={SUN:'Sunday',MON:'Monday',TUE:'Tuesday',WED:'Wednesday',THU:'Thursday',FRI:'Friday',SAT:'Saturday'};
+      const ul=document.getElementById('infoHoursList');
+      if(ul){
+        ul.innerHTML=data.weekHours.map(function(d){
+          return '<li><span class="day">'+(dayMap[d.day]||d.day)+'</span><span class="hrs">'+d.hours+'</span></li>';
+        }).join('');
+      }
+    }
+  }catch(e){/* silently fail — keep defaults */}
+}
+syncStoreStatus();
+
+/* ── Build menu grid from Square catalog ── */
+async function syncMenuImages(){
+  const grid=document.getElementById('menuGrid');
+  /* Featured items to show on homepage (order matters) */
+  const featured=['3-Piece Tenders','5-Piece Tenders','10-Piece Tenders','Family Box','Curly Fries','Regular Fries'];
+  /* Category lookup for display */
+  const catMap={'Tenders':'TENDERS','Combos':'COMBOS','Sides':'SIDES','Drinks':'DRINKS'};
+  /* Tags for specific items */
+  const tagMap={'3-Piece Tenders':'POPULAR','Family Box':'FAMILY','Curly Fries':'NEW'};
+  try{
+    const res=await fetch('/api/menu?t='+Date.now());
+    if(!res.ok)throw new Error('API error');
+    const data=await res.json();
+    if(!data.success||!data.menu||data.menu.length===0)throw new Error('No menu data');
+    /* Pick featured items in order, fall back to first 6 if names don't match */
+    let items=featured.map(n=>data.menu.find(m=>m.name.toLowerCase()===n.toLowerCase())).filter(Boolean);
+    if(items.length===0)items=data.menu.slice(0,6);
+    grid.innerHTML=items.map(item=>{
+      const cat=Object.entries(catMap).find(([k])=>item.name.toLowerCase().includes(k.toLowerCase()));
+      const catLabel=cat?cat[1]:'MENU';
+      /* Assign category based on name keywords */
+      let displayCat='MENU';
+      const n=item.name.toLowerCase();
+      if(n.includes('tender'))displayCat='TENDERS';
+      else if(n.includes('combo')||n.includes('box'))displayCat='COMBOS';
+      else if(n.includes('fries')||n.includes('slaw')||n.includes('mac'))displayCat='SIDES';
+      else if(n.includes('drink')||n.includes('lemon'))displayCat='DRINKS';
+      const tag=tagMap[item.name]||'';
+      /* Use Square image or fallback to stock images */
+      const fallbackImages={
+        '3-Piece Tenders':'https://images.unsplash.com/photo-1562967914-608f82629710?w=400&q=80',
+        '5-Piece Tenders':'https://images.unsplash.com/photo-1562967914-608f82629710?w=400&q=80',
+        '10-Piece Tenders':'https://images.unsplash.com/photo-1562967914-608f82629710?w=400&q=80',
+        'Family Box':'https://images.unsplash.com/photo-1626645738196-c2a72c8bc41a?w=400&q=80',
+        'Curly Fries':'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400&q=80',
+        'Regular Fries':'https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=400&q=80'
+      };
+      const imgSrc=item.imageUrl||fallbackImages[item.name]||'https://images.unsplash.com/photo-1562967914-608f82629710?w=400&q=80';
+      const imgHtml='<div class="mcard-img"><img src="'+imgSrc+'" alt="'+item.name+'" loading="lazy"></div>';
+      const tagHtml=tag?'<div class="mcard-tag">'+tag+'</div>':'';
+      return '<div class="mcard">'+imgHtml+'<div class="mcard-body"><span class="mcard-cat">'+displayCat+'</span><h3>'+item.name+'</h3><p>'+(item.desc||'')+'</p><div class="mcard-price">$'+item.price.toFixed(2)+'</div></div>'+tagHtml+'</div>';
+    }).join('');
+  }catch(e){
+    /* Fallback: show static cards with stock images */
+    grid.innerHTML=[
+      {name:'3-Piece Tenders',cat:'TENDERS',desc:'Three crispy tenders with your choice of dipping sauce.',price:'$8.99',img:'https://images.unsplash.com/photo-1562967914-608f82629710?w=400&q=80',tag:'POPULAR'},
+      {name:'5-Piece Tenders',cat:'TENDERS',desc:'Five crispy tenders — go big or go home.',price:'$12.99',img:'https://images.unsplash.com/photo-1562967914-608f82629710?w=400&q=80'},
+      {name:'10-Piece Tenders',cat:'TENDERS',desc:'Ten crispy tenders. Legend status.',price:'$22.99',img:'https://images.unsplash.com/photo-1562967914-608f82629710?w=400&q=80'},
+      {name:'Family Box',cat:'COMBOS',desc:'10 tenders, two fries, and every sauce. Feed the squad.',price:'$29.99',img:'https://images.unsplash.com/photo-1626645738196-c2a72c8bc41a?w=400&q=80',tag:'FAMILY'},
+      {name:'Curly Fries',cat:'SIDES',desc:'Crispy seasoned curly fries.',price:'$4.49',img:'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400&q=80',tag:'NEW'},
+      {name:'Regular Fries',cat:'SIDES',desc:'Golden crispy fries with Tokyo seasoning.',price:'$3.99',img:'https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=400&q=80'}
+    ].map(i=>'<div class="mcard"><div class="mcard-img"><img src="'+i.img+'" alt="'+i.name+'" loading="lazy"></div><div class="mcard-body"><span class="mcard-cat">'+i.cat+'</span><h3>'+i.name+'</h3><p>'+i.desc+'</p><div class="mcard-price">'+i.price+'</div></div>'+(i.tag?'<div class="mcard-tag">'+i.tag+'</div>':'')+'</div>').join('');
+  }
+  /* Re-trigger GSAP animation on new cards */
+  if(window.gsap)gsap.from('#menuGrid .mcard',{opacity:0,y:55,duration:0.5,stagger:0.09,ease:'power3.out'});
+}
+syncMenuImages();
+
+/* ═══════════════════════════════════════════
+   PHOTO GALLERY CAROUSEL
+   ═══════════════════════════════════════════ */
+(function(){
+  const track=document.getElementById('carouselTrack');
+  const slides=track.querySelectorAll('.carousel-slide');
+  const dotsWrap=document.getElementById('carouselDots');
+  const prevBtn=document.getElementById('carouselPrev');
+  const nextBtn=document.getElementById('carouselNext');
+  const progress=document.getElementById('carouselProgress');
+  if(!track||!slides.length)return;
+
+  let currentIdx=0;
+  let slidesPerView=1;
+  let autoTimer=null;
+  const AUTO_DELAY=4000;
+
+  function calcSlidesPerView(){
+    if(window.innerWidth>=900)return 3;
+    if(window.innerWidth>=600)return 2;
+    return 1;
+  }
+
+  function totalPages(){return Math.max(1,slides.length-slidesPerView+1)}
+
+  function buildDots(){
+    dotsWrap.innerHTML='';
+    const pages=totalPages();
+    for(let i=0;i<pages;i++){
+      const d=document.createElement('div');
+      d.className='cdot'+(i===0?' active':'');
+      d.addEventListener('click',function(){goTo(i)});
+      dotsWrap.appendChild(d);
+    }
+  }
+
+  function updateDots(){
+    const dots=dotsWrap.querySelectorAll('.cdot');
+    dots.forEach(function(d,i){d.classList.toggle('active',i===currentIdx)});
+  }
+
+  function updateProgress(){
+    const pct=((currentIdx+1)/totalPages())*100;
+    progress.style.width=pct+'%';
+  }
+
+  function goTo(idx){
+    const max=totalPages()-1;
+    currentIdx=Math.max(0,Math.min(idx,max));
+    const slideW=slides[0].getBoundingClientRect().width;
+    track.style.transform='translateX(-'+currentIdx*slideW+'px)';
+    updateDots();
+    updateProgress();
+    resetAuto();
+  }
+
+  function next(){goTo(currentIdx>=totalPages()-1?0:currentIdx+1)}
+  function prev(){goTo(currentIdx<=0?totalPages()-1:currentIdx-1)}
+
+  prevBtn.addEventListener('click',prev);
+  nextBtn.addEventListener('click',next);
+
+  function resetAuto(){
+    clearInterval(autoTimer);
+    autoTimer=setInterval(next,AUTO_DELAY);
+  }
+
+  /* Touch/swipe support */
+  let touchStartX=0,touchDiff=0,dragging=false;
+  track.addEventListener('touchstart',function(e){
+    touchStartX=e.touches[0].clientX;
+    dragging=true;
+    track.style.transition='none';
+  },{passive:true});
+  track.addEventListener('touchmove',function(e){
+    if(!dragging)return;
+    touchDiff=e.touches[0].clientX-touchStartX;
+    const slideW=slides[0].getBoundingClientRect().width;
+    track.style.transform='translateX('+(-(currentIdx*slideW)+touchDiff)+'px)';
+  },{passive:true});
+  track.addEventListener('touchend',function(){
+    dragging=false;
+    track.style.transition='';
+    if(Math.abs(touchDiff)>50){
+      touchDiff<0?next():prev();
+    }else{
+      goTo(currentIdx);
+    }
+    touchDiff=0;
+  });
+
+  /* Pause on hover */
+  track.addEventListener('mouseenter',function(){clearInterval(autoTimer)});
+  track.addEventListener('mouseleave',resetAuto);
+
+  function init(){
+    slidesPerView=calcSlidesPerView();
+    buildDots();
+    if(currentIdx>=totalPages())currentIdx=totalPages()-1;
+    goTo(currentIdx);
+  }
+
+  init();
+  window.addEventListener('resize',init);
+  resetAuto();
+})();
+
+/* ═══════════════════════════════════════════
+   SMOOTH SCROLL TO SECTIONS
+   ═══════════════════════════════════════════ */
+document.querySelectorAll('a[href^="#"]').forEach(function(a){
+  a.addEventListener('click',function(e){
+    const id=this.getAttribute('href').slice(1);
+    const target=document.getElementById(id);
+    if(target){
+      e.preventDefault();
+      target.scrollIntoView({behavior:'smooth',block:'start'});
+    }
+  });
+});
+</script>
+</body>
+</html>
