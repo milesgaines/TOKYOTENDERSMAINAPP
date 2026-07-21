@@ -67,8 +67,8 @@ export type Combo = { n: number; name: string; detail: string; price: number };
 
 export const COMBOS: Combo[] = [
   { n: 1, name: "Tender Combo", detail: "1 chicken flavor / fries / slaw", price: 12.95 },
-  { n: 2, name: "Tender Flavor", detail: "2 chicken flavors / fries / slaw", price: 15.95 },
-  { n: 3, name: "Deluxe", detail: "3 chicken flavors", price: 18.95 },
+  { n: 2, name: "Tender Flavor", detail: "2 chicken flavors / fries / slaw", price: 16.95 },
+  { n: 3, name: "Deluxe", detail: "3 chicken flavors", price: 22.95 },
   { n: 4, name: "Obsession", detail: "1 chicken flavor / 1 fry", price: 9.95 },
 ];
 
