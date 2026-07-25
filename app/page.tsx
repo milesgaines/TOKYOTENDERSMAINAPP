@@ -1,4 +1,5 @@
 import Image from "next/image";
+import BackToTop from "./back-to-top";
 import FlavorPicker from "./flavor-picker";
 import Gallery from "./gallery";
 import Price from "./price";
@@ -33,6 +34,7 @@ export default function Home() {
   return (
     <>
       <ScrollFx />
+      <BackToTop />
 
       <header className="nav">
         <a className="nav__mark display" href="#top">
