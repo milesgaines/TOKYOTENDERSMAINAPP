@@ -8,13 +8,15 @@ import {
   COMBOS,
   DRINKS,
   DRINK_PRICE,
+  EXTRA_SAUCE,
   FLAVORS,
   MAPS_URL,
   SAUCES,
   SHAKES,
   SHAKE_LINEUP,
+  SHAKE_PRICE,
   SHOP,
-  SINGLES,
+  SIDES,
   STATS,
   TICKER,
   VIBE_TAGS,
@@ -86,7 +88,7 @@ export default function Home() {
             <p className="hero__badges">
               <span>
                 <i />
-                Gluten-free fryer
+                100% gluten-free
               </span>
               <span>
                 <i />
@@ -183,14 +185,15 @@ export default function Home() {
                 </div>
 
                 <div className="panel reveal" style={stagger(1, 110)}>
-                  <h3 className="panel__title">Shakes</h3>
+                  <h3 className="panel__title">
+                    Shakes <span className="line__price">{money(SHAKE_PRICE)}</span>
+                  </h3>
                   <Image className="panel__hero" src={SHAKE_LINEUP} alt="Matcha, vanilla, chocolate and strawberry shakes" width={646} height={304} />
                   {SHAKES.map((s, i) => (
                     <div className="line reveal" key={s.name} style={stagger(i)}>
                       <span />
                       <span className="line__body">
                         <span className="line__name">{s.name}</span>
-                        {s.size && <span className="line__size">{s.size}</span>}
                       </span>
                       <Price value={s.price} />
                     </div>
@@ -198,8 +201,8 @@ export default function Home() {
                 </div>
 
                 <div className="panel reveal" style={stagger(2, 110)}>
-                  <h3 className="panel__title">Single order</h3>
-                  {SINGLES.map((s, i) => (
+                  <h3 className="panel__title">Sides</h3>
+                  {SIDES.map((s, i) => (
                     <div className="line reveal" key={s.name} style={stagger(i)}>
                       <span />
                       <span className="line__body">
@@ -230,6 +233,9 @@ export default function Home() {
                     </div>
                   ))}
                 </div>
+                <p className="strip__note">
+                  Extra sauce <b>{money(EXTRA_SAUCE)}</b> each
+                </p>
               </div>
 
               <div className="strip reveal">
@@ -241,7 +247,6 @@ export default function Home() {
                     <div className="drink pop reveal" key={d.name} style={stagger(i, 55)}>
                       {d.img && <Image className="drink__can" src={d.img} alt="" width={144} height={216} />}
                       {d.name}
-                      <span>{d.size}</span>
                     </div>
                   ))}
                 </div>
@@ -250,10 +255,10 @@ export default function Home() {
               <div className="board__foot reveal">
                 <p className="board__pills">
                   <span>
-                    <b>Gluten-free</b> fryer
+                    <b>100% gluten-free</b>
                   </span>
                   <span>
-                    Made with <b>love</b> every time
+                    <b>Tokyo-inspired</b> · made fresh
                   </span>
                   <span>
                     Thank you for <b>supporting local</b>
@@ -282,8 +287,7 @@ export default function Home() {
                 duck — the flavors we grew up chasing across the Valley, on the one thing everybody already agrees on.
               </p>
               <p>
-                Marinated 24 hours, tossed to order, out of a dedicated gluten-free fryer. Come hungry. That part is not
-                a slogan.
+                Marinated 24 hours, tossed to order, 100% gluten-free. Come hungry. That part is not a slogan.
               </p>
               <div className="tags">
                 {VIBE_TAGS.map((t) => (

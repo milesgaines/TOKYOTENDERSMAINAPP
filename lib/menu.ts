@@ -35,7 +35,7 @@ export const FLAVORS: Flavor[] = [
   {
     name: "Buffalo",
     img: "/menu/flavors/buffalo.png",
-    note: "Spicy",
+    note: "Bold & Spicy",
     hue: ["#FF4B2B", "#B01000"],
     blurb: "Classic heat, no apologies. Ask for dill ranch and thank yourself later.",
     spicy: true,
@@ -66,52 +66,55 @@ export const FLAVORS: Flavor[] = [
 export type Combo = { n: number; name: string; detail: string; price: number };
 
 export const COMBOS: Combo[] = [
-  { n: 1, name: "Tender Combo", detail: "1 chicken flavor / fries / slaw", price: 12.95 },
-  { n: 2, name: "Tender Flavor", detail: "2 chicken flavors / fries / slaw", price: 16.95 },
-  { n: 3, name: "Deluxe", detail: "3 chicken flavors", price: 22.95 },
-  { n: 4, name: "Obsession", detail: "1 chicken flavor / 1 fry", price: 9.95 },
+  { n: 1, name: "Obsession", detail: "1 chicken flavor · fries", price: 9.95 },
+  { n: 2, name: "Tender Combo", detail: "1 chicken flavor · fries · slaw", price: 12.95 },
+  { n: 3, name: "Tender Flavor", detail: "2 chicken flavors · fries · slaw", price: 16.95 },
+  { n: 4, name: "Deluxe", detail: "3 chicken flavors", price: 22.95 },
 ];
 
 export type Item = { name: string; detail?: string; price: number; size?: string; img?: string };
 
+export const SHAKE_PRICE = 6.25;
+
 export const SHAKES: Item[] = [
-  { name: "Matcha", price: 6.25, size: "18 oz" },
-  { name: "Vanilla", price: 6.25, size: "18 oz" },
-  { name: "Chocolate", price: 6.25, size: "18 oz" },
-  { name: "Strawberry", price: 6.25, size: "18 oz" },
+  { name: "Matcha", price: SHAKE_PRICE },
+  { name: "Vanilla", price: SHAKE_PRICE },
+  { name: "Chocolate", price: SHAKE_PRICE },
+  { name: "Strawberry", price: SHAKE_PRICE },
 ];
 
 export const SHAKE_LINEUP = "/menu/shakes/lineup.png";
 
-export const SINGLES: Item[] = [
-  { name: "Single Chicken", detail: "Flavor of your choice", price: 7.95 },
-  { name: "Fries Alone", price: 3.95 },
-  { name: "Cabbage Slaw", price: 3.95 },
-  { name: "Shakes", price: 6.25 },
+export const SIDES: Item[] = [
+  { name: "1 Chicken Flavor", detail: "Flavor of your choice", price: 7.95 },
+  { name: "Fries", price: 3.95 },
+  { name: "Slaw", price: 3.95 },
+  { name: "Drinks", detail: "Coca-Cola, Diet Coke, Sprite, Fanta, Water", price: 3.25 },
 ];
+
+export const EXTRA_SAUCE = 0.35;
 
 export type Sauce = { name: string; note?: string; color: string; spicy?: boolean; img: string };
 
 export const SAUCES: Sauce[] = [
-  { name: "Yuzu Soy", color: "#F5B233" , img: "/menu/sauces/yuzu-soy.png" },
-  { name: "Garlic Soy", color: "#4A2E14" , img: "/menu/sauces/garlic-soy.png" },
-  { name: "Tokyo Peking", color: "#3B1B08" , img: "/menu/sauces/tokyo-peking.png" },
-  { name: "Peking Sweet", color: "#C0301A" , img: "/menu/sauces/peking-sweet.png" },
-  { name: "Buffalo", note: "Spicy", color: "#E02214", spicy: true , img: "/menu/sauces/buffalo.png" },
-  { name: "Coconut Caramel", color: "#B5762F" , img: "/menu/sauces/coconut-caramel.png" },
-  { name: "Maple Brown Butter", color: "#71400F" , img: "/menu/sauces/maple-brown-butter.png" },
-  { name: "Dill Ranch", color: "#F2EFE2" , img: "/menu/sauces/dill-ranch.png" },
+  { name: "Yuzu Soy", color: "#F5B233", img: "/menu/sauces/yuzu-soy.png" },
+  { name: "Garlic Soy", color: "#4A2E14", img: "/menu/sauces/garlic-soy.png" },
+  { name: "Tokyo Peking", color: "#3B1B08", img: "/menu/sauces/tokyo-peking.png" },
+  { name: "Buffalo", note: "Bold & Spicy", color: "#E02214", spicy: true, img: "/menu/sauces/buffalo.png" },
+  { name: "Coconut Caramel", color: "#B5762F", img: "/menu/sauces/coconut-caramel.png" },
+  { name: "Maple Brown Butter", color: "#71400F", img: "/menu/sauces/maple-brown-butter.png" },
+  { name: "Cinnamon Sugar Powder", color: "#9C5A1E", img: "/menu/flavors/cinnamon-sugar-powder.png" },
+  { name: "Dill Ranch", color: "#F2EFE2", img: "/menu/sauces/dill-ranch.png" },
 ];
 
 export const DRINK_PRICE = 3.25;
 
 export const DRINKS: Item[] = [
-  { name: "Coca-Cola", price: DRINK_PRICE, size: "12 oz" , img: "/menu/drinks/coca-cola.png" },
-  { name: "Diet Coke", price: DRINK_PRICE, size: "12 oz" , img: "/menu/drinks/diet-coke.png" },
-  { name: "Sprite", price: DRINK_PRICE, size: "12 oz" , img: "/menu/drinks/sprite.png" },
-  { name: "Fanta", price: DRINK_PRICE, size: "12 oz" , img: "/menu/drinks/fanta.png" },
-  { name: "Mexican Coke", price: DRINK_PRICE, size: "12 oz" , img: "/menu/drinks/mexican-coke.png" },
-  { name: "Bottled Water", detail: "Premium PET", price: DRINK_PRICE, size: "20 oz" , img: "/menu/drinks/bottled-water.png" },
+  { name: "Coca-Cola", price: DRINK_PRICE, img: "/menu/drinks/coca-cola.png" },
+  { name: "Diet Coke", price: DRINK_PRICE, img: "/menu/drinks/diet-coke.png" },
+  { name: "Sprite", price: DRINK_PRICE, img: "/menu/drinks/sprite.png" },
+  { name: "Fanta", price: DRINK_PRICE, img: "/menu/drinks/fanta.png" },
+  { name: "Water", price: DRINK_PRICE, img: "/menu/drinks/bottled-water.png" },
 ];
 
 export const SHOP = {
@@ -134,10 +137,10 @@ export const MAPS_URL = `https://maps.google.com/?q=${encodeURIComponent(
 
 /** Marquee copy — carried over from the previous build. */
 export const TICKER = [
+  "100% Gluten-Free",
+  "Tokyo-Inspired",
+  "Made Fresh",
   "Crispy AF",
-  "Spicy Tenders",
-  "Fresh Daily",
-  "Garlic Pepper",
   SHOP.street,
   SHOP.phone,
   SHOP.opening,
@@ -160,6 +163,6 @@ export const VIBE_TAGS = [
 ];
 
 export const ALLERGEN =
-  "Our food may contain or come in contact with common allergens such as milk, eggs, soy, wheat, peanuts, or tree nuts. Please inform our staff of any food allergies before ordering.";
+  "Our food may contain or come in contact with common allergens including soy, eggs, dairy, sesame and tree nuts. Please inform our staff of any food allergies before ordering.";
 
 export const money = (n: number) => n.toFixed(2);

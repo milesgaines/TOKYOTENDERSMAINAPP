@@ -472,6 +472,18 @@ button { font: inherit; color: inherit; border: 0; background: none; cursor: poi
   margin-bottom: 5px;
 }
 .drink span { color: var(--faint); font-size: 0.62rem; }
+.strip__note {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--edge-soft);
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.strip__note b { color: var(--orange); font-style: italic; }
 .board__foot { display: grid; gap: 14px; margin-top: 20px; padding-top: 18px; border-top: 1.5px solid var(--edge-soft); text-align: center; }
 .board__pills {
   display: flex;

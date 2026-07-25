@@ -6,7 +6,7 @@ import "./globals.css";
 const display = Bebas_Neue({ weight: "400", subsets: ["latin"], variable: "--font-display", display: "swap" });
 const body = Inter({ subsets: ["latin"], variable: "--font-body", display: "swap" });
 
-const description = `Japanese-flavored chicken tenders at ${SHOP.street}, ${SHOP.city} ${SHOP.state}. Seven flavors, eight sauces, gluten-free fryer. ${SHOP.tagline}.`;
+const description = `Tokyo-inspired chicken tenders at ${SHOP.street}, ${SHOP.city} ${SHOP.state}. Seven flavors, eight sauces, 100% gluten-free. ${SHOP.tagline}.`;
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.tokyotenders.com"),
