@@ -6,14 +6,11 @@ import ScrollFx from "./scroll-fx";
 import {
   ALLERGEN,
   COMBOS,
-  DRINKS,
-  DRINK_PRICE,
   EXTRA_SAUCE,
   FLAVORS,
   MAPS_URL,
   SAUCES,
   SHAKES,
-  SHAKE_LINEUP,
   SHAKE_PRICE,
   SHOP,
   SIDES,
@@ -160,111 +157,110 @@ export default function Home() {
               <p className="sec__sub">Call ahead or walk in. No app, no fees, no upsell screens.</p>
             </div>
 
-            <div className="board">
-              <div className="board__top reveal">
-                <Image src="/badge.png" alt={SHOP.name} width={104} height={104} />
-                <p className="display">
-                  Come hungry <span>·</span> Leave happy
-                </p>
-              </div>
-
-              <div className="board__cols">
-                <div className="panel reveal">
-                  <h3 className="panel__title">Combos</h3>
-                  {COMBOS.map((c, i) => (
-                    <div className="line reveal" key={c.name} style={stagger(i)}>
-                      <span className="line__n">{c.n}</span>
-                      <span className="line__body">
-                        <span className="line__name">{c.name}</span>
-                        <br />
-                        <span className="line__detail">{c.detail}</span>
-                      </span>
-                      <Price value={c.price} />
-                    </div>
-                  ))}
-                </div>
-
-                <div className="panel reveal" style={stagger(1, 110)}>
-                  <h3 className="panel__title">
-                    Shakes <span className="line__price">{money(SHAKE_PRICE)}</span>
-                  </h3>
-                  <Image className="panel__hero" src={SHAKE_LINEUP} alt="Matcha, vanilla, chocolate and strawberry shakes" width={646} height={304} />
-                  {SHAKES.map((s, i) => (
-                    <div className="line reveal" key={s.name} style={stagger(i)}>
-                      <span />
-                      <span className="line__body">
-                        <span className="line__name">{s.name}</span>
-                      </span>
-                      <Price value={s.price} />
-                    </div>
-                  ))}
-                </div>
-
-                <div className="panel reveal" style={stagger(2, 110)}>
-                  <h3 className="panel__title">Sides</h3>
-                  {SIDES.map((s, i) => (
-                    <div className="line reveal" key={s.name} style={stagger(i)}>
-                      <span />
-                      <span className="line__body">
-                        <span className="line__name">{s.name}</span>
-                        {s.detail && (
-                          <>
-                            <br />
-                            <span className="line__detail">{s.detail}</span>
-                          </>
-                        )}
-                      </span>
-                      <Price value={s.price} />
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="strip reveal">
-                <h3 className="panel__title">Sauces</h3>
-                <div className="strip__grid">
-                  {SAUCES.map((s, i) => (
-                    <div className="sauce pop reveal" key={s.name} style={stagger(i, 55)}>
-                      <Image className="sauce__pot" src={s.img} alt="" width={196} height={122} />
-                      <span className="sauce__name">
-                        {s.name}
-                        {s.note && <em>{s.note}</em>}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-                <p className="strip__note">
-                  Extra sauce <b>{money(EXTRA_SAUCE)}</b> each
-                </p>
-              </div>
-
-              <div className="strip reveal">
-                <h3 className="panel__title">
-                  Drinks <span className="line__price">{money(DRINK_PRICE)}</span>
-                </h3>
-                <div className="strip__grid">
-                  {DRINKS.map((d, i) => (
-                    <div className="drink pop reveal" key={d.name} style={stagger(i, 55)}>
-                      {d.img && <Image className="drink__can" src={d.img} alt="" width={144} height={216} />}
-                      {d.name}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="board__foot reveal">
-                <p className="board__pills">
+            {/* The printed menu board, rebuilt 1:1 — orange sidebar, combos + boxed
+                sides, shakes + sauces split by a rule. */}
+            <div className="board reveal">
+              <aside className="bside">
+                <span className="bside__gf">
+                  <b>100%</b>
+                  <em>Gluten-Free</em>
+                </span>
+                <Image className="bside__logo" src="/badge.png" alt={SHOP.name} width={110} height={110} />
+                <p className="display bside__tag">
+                  Come
+                  <br />
+                  Hungry
+                  <br />
                   <span>
-                    <b>100% gluten-free</b>
-                  </span>
-                  <span>
-                    <b>Tokyo-inspired</b> · made fresh
-                  </span>
-                  <span>
-                    Thank you for <b>supporting local</b>
+                    Leave
+                    <br />
+                    Happy
                   </span>
                 </p>
-                <p className="board__allergen">
+                <span className="bside__rule" aria-hidden />
+                <p className="bside__sub">
+                  Tokyo-Inspired
+                  <br />
+                  Made Fresh
+                </p>
+              </aside>
+
+              <div className="bmain">
+                <div>
+                  <h3 className="display bhead bhead--rule">Choose your flavor</h3>
+                  <p className="choose">
+                    {FLAVORS.map((f) => (
+                      <span key={f.name}>
+                        {f.name}
+                        {f.note && <em>({f.note})</em>}
+                      </span>
+                    ))}
+                  </p>
+                </div>
+
+                <div className="bcols">
+                  <div>
+                    <h3 className="display bhead bhead--rule bhead--xl">Combos</h3>
+                    {COMBOS.map((c, i) => (
+                      <div className="crow reveal" key={c.name} style={stagger(i)}>
+                        <span className="crow__n" aria-hidden>
+                          <b className="display">{c.n}</b>
+                        </span>
+                        <span className="crow__body">
+                          <span className="crow__name">{c.name}</span>
+                          <span className="crow__detail">{c.detail}</span>
+                        </span>
+                        <Price value={c.price} className="crow__price" />
+                      </div>
+                    ))}
+                  </div>
+
+                  <aside className="sidesbox reveal" style={stagger(2, 110)}>
+                    <h3 className="display bhead bhead--under">Sides</h3>
+                    {SIDES.map((s) => (
+                      <div className="srow" key={s.name}>
+                        <span className="srow__name">{s.name}</span>
+                        {s.detail && <span className="srow__detail">{s.detail}</span>}
+                        <Price value={s.price} className="srow__price" />
+                      </div>
+                    ))}
+                  </aside>
+                </div>
+
+                <div className="bbottom">
+                  <div>
+                    <h3 className="display bhead">
+                      Shakes <Price value={SHAKE_PRICE} className="bhead__price" />
+                    </h3>
+                    <div className="shakes">
+                      {SHAKES.map((s, i) => (
+                        <figure className="shk pop reveal" key={s.name} style={stagger(i, 70)}>
+                          <figcaption>{s.name}</figcaption>
+                          {s.img && <Image src={s.img} alt={`${s.name} shake`} width={162} height={304} />}
+                        </figure>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="display bhead">Sauces</h3>
+                    <p className="saucelist">
+                      {SAUCES.map((s) => (
+                        <span key={s.name}>
+                          {s.name}
+                          {s.note && <em>({s.note})</em>}
+                        </span>
+                      ))}
+                    </p>
+                    <p className="extra">
+                      <span>Extra sauce</span>
+                      <b>${money(EXTRA_SAUCE)}</b>
+                      <span>each</span>
+                    </p>
+                  </div>
+                </div>
+
+                <p className="ballergen">
                   <b>Allergen notice:</b> {ALLERGEN}
                 </p>
               </div>

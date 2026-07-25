@@ -77,13 +77,12 @@ export type Item = { name: string; detail?: string; price: number; size?: string
 export const SHAKE_PRICE = 6.25;
 
 export const SHAKES: Item[] = [
-  { name: "Matcha", price: SHAKE_PRICE },
-  { name: "Vanilla", price: SHAKE_PRICE },
-  { name: "Chocolate", price: SHAKE_PRICE },
-  { name: "Strawberry", price: SHAKE_PRICE },
+  { name: "Matcha", price: SHAKE_PRICE, img: "/menu/shakes/matcha.png" },
+  { name: "Vanilla", price: SHAKE_PRICE, img: "/menu/shakes/vanilla.png" },
+  { name: "Chocolate", price: SHAKE_PRICE, img: "/menu/shakes/chocolate.png" },
+  { name: "Strawberry", price: SHAKE_PRICE, img: "/menu/shakes/strawberry.png" },
 ];
 
-export const SHAKE_LINEUP = "/menu/shakes/lineup.png";
 
 export const SIDES: Item[] = [
   { name: "1 Chicken Flavor", detail: "Flavor of your choice", price: 7.95 },
@@ -105,16 +104,6 @@ export const SAUCES: Sauce[] = [
   { name: "Maple Brown Butter", color: "#71400F", img: "/menu/sauces/maple-brown-butter.png" },
   { name: "Cinnamon Sugar Powder", color: "#9C5A1E", img: "/menu/flavors/cinnamon-sugar-powder.png" },
   { name: "Dill Ranch", color: "#F2EFE2", img: "/menu/sauces/dill-ranch.png" },
-];
-
-export const DRINK_PRICE = 3.25;
-
-export const DRINKS: Item[] = [
-  { name: "Coca-Cola", price: DRINK_PRICE, img: "/menu/drinks/coca-cola.png" },
-  { name: "Diet Coke", price: DRINK_PRICE, img: "/menu/drinks/diet-coke.png" },
-  { name: "Sprite", price: DRINK_PRICE, img: "/menu/drinks/sprite.png" },
-  { name: "Fanta", price: DRINK_PRICE, img: "/menu/drinks/fanta.png" },
-  { name: "Water", price: DRINK_PRICE, img: "/menu/drinks/bottled-water.png" },
 ];
 
 export const SHOP = {

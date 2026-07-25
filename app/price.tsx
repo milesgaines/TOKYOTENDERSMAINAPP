@@ -2,8 +2,8 @@
 import { useEffect, useRef, useState } from "react";
 import { money } from "@/lib/menu";
 
-/** Price that counts up the first time it scrolls into view. */
-export default function Price({ value }: { value: number }) {
+/** Dollar price that counts up the first time it scrolls into view. */
+export default function Price({ value, className }: { value: number; className: string }) {
   const ref = useRef<HTMLSpanElement>(null);
   const [n, setN] = useState(0);
 
@@ -39,8 +39,8 @@ export default function Price({ value }: { value: number }) {
   }, [value]);
 
   return (
-    <span className="line__price" ref={ref}>
-      {money(n)}
+    <span className={className} ref={ref}>
+      ${money(n)}
     </span>
   );
 }
