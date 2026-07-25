@@ -270,8 +270,8 @@ export default function Home() {
 
         <Gallery />
 
-        {/* ── Vibe ─────────────────────────────────────────── */}
-        <section className="sec" id="vibe">
+        {/* ── Vibe — night-shot band, the truck fades out of the dark ── */}
+        <section className="sec vibe-sec" id="vibe">
           <div className="shell vibe">
             <div className="vibe__copy reveal">
               <p className="eyebrow leaf">The vibe</p>
@@ -294,7 +294,7 @@ export default function Home() {
               </div>
             </div>
             <div className="vibe__art reveal" style={{ ["--d" as string]: "120ms" }}>
-              <Image src="/rooster.png" alt="" width={1759} height={2131} />
+              <Image src="/truck.jpg" alt="The Tokyo Tenders truck, serving window open" width={984} height={1070} />
             </div>
           </div>
         </section>

@@ -729,6 +729,25 @@ button { font: inherit; color: inherit; border: 0; background: none; cursor: poi
 }
 .vibe__art img { position: relative; width: min(320px, 76%); height: auto; }
 
+/* Night-shot variant: black band, the truck's own black field dissolves into it */
+.vibe-sec {
+  background: #000;
+  color: var(--paper);
+}
+.vibe-sec .vibe__quote { color: var(--paper); }
+.vibe-sec .vibe__quote span { color: var(--orange-lit); }
+.vibe-sec .vibe__copy p { color: rgba(255, 246, 233, 0.7); }
+.vibe-sec .tag { border-color: rgba(255, 246, 233, 0.24); color: #ffb27a; }
+.vibe-sec .vibe__art::before {
+  background: radial-gradient(circle, rgba(255, 85, 0, 0.26), transparent 62%);
+}
+.vibe-sec .vibe__art img {
+  width: min(600px, 100%);
+  -webkit-mask-image: radial-gradient(92% 88% at 52% 46%, #000 52%, transparent 97%);
+  mask-image: radial-gradient(92% 88% at 52% 46%, #000 52%, transparent 97%);
+  filter: saturate(1.06) contrast(1.03);
+}
+
 /* ── Visit ─────────────────────────────────────────────────── */
 .visit { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
 .vcard {
