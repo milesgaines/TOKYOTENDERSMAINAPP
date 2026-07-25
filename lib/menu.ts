@@ -129,7 +129,7 @@ export const TICKER = [
 export const STATS = [
   { n: "1", label: "Family recipe" },
   { n: "24hr", label: "Marinated fresh daily" },
-  { n: "8", label: "Signature sauces" },
+  { n: "7", label: "Signature flavors" },
   { n: "100%", label: "Made with love" },
 ];
 

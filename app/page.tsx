@@ -93,7 +93,7 @@ export default function Home() {
               </span>
               <span>
                 <i />
-                {SAUCES.length} sauces
+                Made fresh
               </span>
               <span>
                 <i />
