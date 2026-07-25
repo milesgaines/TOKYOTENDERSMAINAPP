@@ -1,14 +1,9 @@
 "use client";
 import { useEffect } from "react";
 
-/** Renders nothing. Wires the sticky nav state and the scroll-reveal observer. */
+/** Renders nothing. Wires the scroll-reveal observer. */
 export default function ScrollFx() {
   useEffect(() => {
-    const nav = document.querySelector(".nav");
-    const onScroll = () => nav?.classList.toggle("stuck", window.scrollY > 24);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
@@ -22,10 +17,7 @@ export default function ScrollFx() {
     );
     document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
 
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      io.disconnect();
-    };
+    return () => io.disconnect();
   }, []);
 
   return null;

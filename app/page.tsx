@@ -294,7 +294,7 @@ export default function Home() {
               </div>
             </div>
             <div className="vibe__art reveal" style={{ ["--d" as string]: "120ms" }}>
-              <Image src="/truck.jpg" alt="The Tokyo Tenders truck, serving window open" width={984} height={1070} />
+              <Image src="/truck.png" alt="The Tokyo Tenders truck, serving window open" width={860} height={1000} />
             </div>
           </div>
         </section>

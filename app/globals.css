@@ -107,9 +107,9 @@ button { font: inherit; color: inherit; border: 0; background: none; cursor: poi
   .pill i { animation: none !important; }
 }
 
-/* ── Top nav ───────────────────────────────────────────────── */
+/* ── Top nav — sits on the hero, scrolls away with it ──────── */
 .nav {
-  position: fixed;
+  position: absolute;
   inset: 0 0 auto;
   z-index: 90;
   display: flex;
@@ -117,13 +117,6 @@ button { font: inherit; color: inherit; border: 0; background: none; cursor: poi
   justify-content: space-between;
   gap: 16px;
   padding: 12px var(--gut);
-  border-bottom: 1.5px solid transparent;
-  transition: background 0.35s, border-color 0.35s, backdrop-filter 0.35s;
-}
-.nav.stuck {
-  background: rgba(255, 253, 249, 0.88);
-  backdrop-filter: blur(14px) saturate(1.4);
-  border-bottom-color: var(--edge-soft);
 }
 .nav__mark { display: flex; align-items: center; gap: 10px; font-size: clamp(1.05rem, 3vw, 1.3rem); }
 .nav__mark img { width: 34px; height: auto; }
@@ -743,8 +736,6 @@ button { font: inherit; color: inherit; border: 0; background: none; cursor: poi
 }
 .vibe-sec .vibe__art img {
   width: min(600px, 100%);
-  -webkit-mask-image: radial-gradient(92% 88% at 52% 46%, #000 52%, transparent 97%);
-  mask-image: radial-gradient(92% 88% at 52% 46%, #000 52%, transparent 97%);
   filter: saturate(1.06) contrast(1.03);
 }
 
