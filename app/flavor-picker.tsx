@@ -21,7 +21,6 @@ export default function FlavorPicker() {
             onClick={() => setI(n)}
             onMouseEnter={() => setI(n)}
           >
-            <span className="chip__dot" aria-hidden />
             <span className="chip__name">{f.name}</span>
             {f.note && <span className="chip__note">{f.note}</span>}
           </button>
