@@ -236,7 +236,7 @@ export default function Home() {
                       {SHAKES.map((s, i) => (
                         <figure className="shk pop reveal" key={s.name} style={stagger(i, 70)}>
                           <figcaption>{s.name}</figcaption>
-                          {s.img && <Image src={s.img} alt={`${s.name} shake`} width={162} height={304} />}
+                          {s.img && <Image src={s.img} alt={`${s.name} shake`} width={117} height={192} />}
                         </figure>
                       ))}
                     </div>
