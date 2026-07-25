@@ -57,10 +57,10 @@ export const FLAVORS: Flavor[] = [
 export type Combo = { n: number; name: string; detail: string; price: number };
 
 export const COMBOS: Combo[] = [
-  { n: 1, name: "Obsession", detail: "1 chicken flavor · fries", price: 9.95 },
-  { n: 2, name: "Tender Combo", detail: "1 chicken flavor · fries · slaw", price: 12.95 },
-  { n: 3, name: "Tender Flavor", detail: "2 chicken flavors · fries · slaw", price: 16.95 },
-  { n: 4, name: "Deluxe", detail: "3 chicken flavors", price: 22.95 },
+  { n: 1, name: "Obsession", detail: "1 Chicken Flavor • Fries", price: 9.95 },
+  { n: 2, name: "Tender Combo", detail: "1 Chicken Flavor • Fries • Slaw", price: 12.95 },
+  { n: 3, name: "Tender Flavor", detail: "2 Chicken Flavors • Fries • Slaw", price: 16.95 },
+  { n: 4, name: "Deluxe", detail: "3 Chicken Flavors", price: 22.95 },
 ];
 
 export type Item = { name: string; detail?: string; price: number; size?: string; img?: string };
@@ -79,7 +79,7 @@ export const SIDES: Item[] = [
   { name: "1 Chicken Flavor", detail: "Flavor of your choice", price: 7.95 },
   { name: "Fries", price: 3.95 },
   { name: "Slaw", price: 3.95 },
-  { name: "Drinks", detail: "Coca-Cola, Diet Coke, Sprite, Fanta, Water", price: 3.25 },
+  { name: "Drinks", detail: "(Coca-Cola, Diet Coke, Sprite, Fanta, Water)", price: 3.25 },
 ];
 
 export const EXTRA_SAUCE = 0.35;
@@ -143,6 +143,6 @@ export const VIBE_TAGS = [
 ];
 
 export const ALLERGEN =
-  "Our food may contain or come in contact with common allergens including soy, eggs, dairy, sesame and tree nuts. Please inform our staff of any food allergies before ordering.";
+  "Our food may contain or come in contact with common allergens including soy, eggs, dairy, sesame and tree nuts.";
 
 export const money = (n: number) => n.toFixed(2);
