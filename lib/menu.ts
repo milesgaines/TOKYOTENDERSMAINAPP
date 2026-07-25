@@ -4,8 +4,6 @@
 export type Flavor = {
   name: string;
   note?: string;
-  /** Ingredient shot lifted from the printed menu. */
-  img: string;
   /** Two-stop gradient the flavor picker paints the section with. */
   hue: [string, string];
   blurb: string;
@@ -16,25 +14,21 @@ export type Flavor = {
 export const FLAVORS: Flavor[] = [
   {
     name: "Yuzu Soy",
-    img: "/menu/flavors/yuzu-soy.png",
     hue: ["#FFD24A", "#F08A00"],
     blurb: "Japanese citrus cut with soy — bright, sharp, gone in four bites.",
   },
   {
     name: "Garlic Soy",
-    img: "/menu/flavors/garlic-soy.png",
     hue: ["#F0E6C8", "#B98A3E"],
     blurb: "Toasted garlic and dark soy. The one you order every time after the first time.",
   },
   {
     name: "Tokyo Peking",
-    img: "/menu/flavors/tokyo-peking.png",
     hue: ["#C9873F", "#5A2A0C"],
     blurb: "Deep, lacquered, five-spice glaze. Peking duck energy on a tender.",
   },
   {
     name: "Buffalo",
-    img: "/menu/flavors/buffalo.png",
     note: "Bold & Spicy",
     hue: ["#FF4B2B", "#B01000"],
     blurb: "Classic heat, no apologies. Ask for dill ranch and thank yourself later.",
@@ -42,21 +36,18 @@ export const FLAVORS: Flavor[] = [
   },
   {
     name: "Coconut Caramel",
-    img: "/menu/flavors/coconut-caramel.png",
     hue: ["#F7C98B", "#B4661F"],
     blurb: "Toasted coconut folded into caramel. Sweet-salty, dangerously repeatable.",
     sweet: true,
   },
   {
     name: "Maple Brown Butter",
-    img: "/menu/flavors/maple-brown-butter.png",
     hue: ["#FFB03A", "#8C4A0A"],
     blurb: "Browned butter, real maple. Breakfast and dinner shaking hands.",
     sweet: true,
   },
   {
     name: "Cinnamon Sugar Powder",
-    img: "/menu/flavors/cinnamon-sugar-powder.png",
     hue: ["#F6D9B0", "#9C5A1E"],
     blurb: "Dusted like a churro, crunches like a tender. The dessert that isn't dessert.",
     sweet: true,
@@ -93,17 +84,17 @@ export const SIDES: Item[] = [
 
 export const EXTRA_SAUCE = 0.35;
 
-export type Sauce = { name: string; note?: string; color: string; spicy?: boolean; img: string };
+export type Sauce = { name: string; note?: string };
 
 export const SAUCES: Sauce[] = [
-  { name: "Yuzu Soy", color: "#F5B233", img: "/menu/sauces/yuzu-soy.png" },
-  { name: "Garlic Soy", color: "#4A2E14", img: "/menu/sauces/garlic-soy.png" },
-  { name: "Tokyo Peking", color: "#3B1B08", img: "/menu/sauces/tokyo-peking.png" },
-  { name: "Buffalo", note: "Bold & Spicy", color: "#E02214", spicy: true, img: "/menu/sauces/buffalo.png" },
-  { name: "Coconut Caramel", color: "#B5762F", img: "/menu/sauces/coconut-caramel.png" },
-  { name: "Maple Brown Butter", color: "#71400F", img: "/menu/sauces/maple-brown-butter.png" },
-  { name: "Cinnamon Sugar Powder", color: "#9C5A1E", img: "/menu/flavors/cinnamon-sugar-powder.png" },
-  { name: "Dill Ranch", color: "#F2EFE2", img: "/menu/sauces/dill-ranch.png" },
+  { name: "Yuzu Soy" },
+  { name: "Garlic Soy" },
+  { name: "Tokyo Peking" },
+  { name: "Buffalo", note: "Bold & Spicy" },
+  { name: "Coconut Caramel" },
+  { name: "Maple Brown Butter" },
+  { name: "Cinnamon Sugar Powder" },
+  { name: "Dill Ranch" },
 ];
 
 export const SHOP = {

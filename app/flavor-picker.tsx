@@ -1,9 +1,8 @@
 "use client";
-import Image from "next/image";
 import { useState } from "react";
 import { FLAVORS } from "@/lib/menu";
 
-/** Pick a flavor, the whole section takes its color. The one thing on the page you play with. */
+/** Pick a flavor, the section takes its color. The one thing on the page you play with. */
 export default function FlavorPicker() {
   const [i, setI] = useState(0);
   const active = FLAVORS[i];
@@ -22,7 +21,7 @@ export default function FlavorPicker() {
             onClick={() => setI(n)}
             onMouseEnter={() => setI(n)}
           >
-            <Image className="chip__shot" src={f.img} alt="" width={240} height={248} />
+            <span className="chip__dot" aria-hidden />
             <span className="chip__name">{f.name}</span>
             {f.note && <span className="chip__note">{f.note}</span>}
           </button>

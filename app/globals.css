@@ -335,16 +335,17 @@ button { font: inherit; color: inherit; border: 0; background: none; cursor: poi
   transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
 }
 .chip:hover { transform: translateY(-4px); border-color: var(--edge); }
-.chip__shot {
-  width: auto;
-  height: 62px;
-  object-fit: contain;
-  mix-blend-mode: multiply;
-  filter: drop-shadow(0 6px 10px rgba(28, 21, 18, 0.16));
+.chip__dot {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: radial-gradient(60% 55% at 38% 30%, rgba(255, 255, 255, 0.6), transparent 60%),
+    linear-gradient(150deg, var(--c1), var(--c2));
+  box-shadow: 0 0 0 1.5px rgba(28, 21, 18, 0.1), 0 8px 16px -9px var(--c2);
   transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-.chip:hover .chip__shot,
-.chip[aria-selected="true"] .chip__shot { transform: scale(1.1) translateY(-2px); }
+.chip:hover .chip__dot,
+.chip[aria-selected="true"] .chip__dot { transform: scale(1.15) translateY(-2px); }
 .chip__name {
   font-size: 0.72rem;
   font-weight: 800;
