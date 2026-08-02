@@ -1,7 +1,8 @@
-// When an order is fired at the counter, text the CUSTOMER a link to play the egg game while their
-// food cooks — their phone buzzes when the kitchen marks it ready. The kitchen board (and an optional
-// staff email/SMS) is the ready-signal side. With NO keys set it still logs everything so the whole
-// flow is testable today; Twilio just makes the customer text real.
+// When an order is fired, the guest gets a text to play the egg game while their food cooks. We DON'T
+// use a paid SMS gateway (Twilio) — the text is sent from the restaurant's OWN number: the kitchen
+// board shows a one-tap "Text to play" that opens the device's Messages app pre-filled (see
+// smsHref/kitchen page). This module just builds the links and logs the ticket; the buzz on ready is
+// handled separately (APNs push + the in-app poll).
 import type { Order } from "./orders";
 
 function origin(): string {
@@ -10,7 +11,7 @@ function origin(): string {
   return "http://localhost:3210";
 }
 
-// The customer-facing link: a web page that opens the app to this order (or sends them to install it).
+// The customer-facing link: a page that opens the app to this order (or sends them to install it).
 export function playLink(o: Order): string {
   return `${origin()}/play?c=${o.pairCode}`;
 }
@@ -20,30 +21,16 @@ export function readyLink(o: Order): string {
   return `${origin()}/api/order/${o.id}/ready?token=${o.readyToken}`;
 }
 
-async function twilio(to: string, body: string) {
-  const sid = process.env.TWILIO_ACCOUNT_SID, tok = process.env.TWILIO_AUTH_TOKEN, from = process.env.TWILIO_FROM;
-  if (!sid || !tok || !from || !to) return;
-  try {
-    await fetch(`https://api.twilio.com/2010-04-01/Accounts/${sid}/Messages.json`, {
-      method: "POST",
-      headers: { Authorization: "Basic " + Buffer.from(`${sid}:${tok}`).toString("base64"), "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({ From: from, To: to, Body: body }).toString(),
-    });
-  } catch (e) { console.error("twilio failed", e); }
-}
-
-// Text the customer: play while you wait.
-async function textCustomer(o: Order) {
-  if (!o.customerPhone) return;
+// A pre-filled SMS the restaurant device sends FROM ITS OWN NUMBER (no Twilio). Used by the board.
+export function smsHref(o: Order): string {
   const body = `🍗 Tokyo Tenders — order #${o.num} is cooking! Beat our egg game while you wait, we'll buzz you the second it's ready: ${playLink(o)}`;
-  await twilio(o.customerPhone, body);
+  const to = (o.customerPhone || "").replace(/[^\d+]/g, "");
+  // iOS/macOS Messages honor `sms:<number>?&body=`; the staffer just taps Send.
+  return `sms:${to}?&body=${encodeURIComponent(body)}`;
 }
 
-// Optional staff heads-up (for kitchens not watching the board) with the tap-to-buzz link.
-async function notifyStaff(o: Order) {
-  const to = process.env.STORE_SMS_TO;
-  if (to) await twilio(to, `NEW #${o.num} — ${o.customerName}${o.note ? ` (${o.note})` : ""}\nTAP WHEN READY: ${readyLink(o)}`);
-
+// Optional staff heads-up email (for kitchens not watching the board) with the tap-to-buzz link.
+async function notifyStaffEmail(o: Order) {
   const key = process.env.RESEND_API_KEY;
   if (!key) return;
   const html = `<div style="font-family:system-ui;max-width:440px">
@@ -61,6 +48,6 @@ async function notifyStaff(o: Order) {
 }
 
 export async function dispatchOrder(o: Order): Promise<void> {
-  console.log(`\n🍗 ORDER #${o.num} (${o.customerName}${o.customerPhone ? " " + o.customerPhone : ""}) code ${o.pairCode}\n   PLAY LINK (texts customer): ${playLink(o)}\n   READY LINK (staff taps): ${readyLink(o)}\n`);
-  await Promise.allSettled([textCustomer(o), notifyStaff(o)]);
+  console.log(`\n🍗 ORDER #${o.num} (${o.customerName}${o.customerPhone ? " " + o.customerPhone : ""}) code ${o.pairCode}\n   PLAY LINK (text the guest from the shop number): ${playLink(o)}\n   READY LINK (staff taps): ${readyLink(o)}\n`);
+  await notifyStaffEmail(o);
 }

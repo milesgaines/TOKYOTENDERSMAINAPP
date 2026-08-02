@@ -150,7 +150,7 @@ button { font: inherit; color: inherit; border: 0; background: none; cursor: poi
 .btn--fill {
   background: var(--orange);
   color: #fff;
-  box-shadow: 0 14px 30px -14px rgba(255, 85, 0, 0.9);
+  box-shadow: 0 10px 22px -14px rgba(255, 85, 0, 0.6);
 }
 .btn--fill:hover { background: var(--orange-lit); transform: translateY(-2px); }
 .btn--ghost { border: 1.5px solid var(--edge); color: var(--ink); }
@@ -243,6 +243,15 @@ button { font: inherit; color: inherit; border: 0; background: none; cursor: poi
 }
 .hero__badges span { display: inline-flex; align-items: center; gap: 7px; }
 .hero__badges i { width: 5px; height: 5px; border-radius: 50%; background: var(--orange); font-style: normal; }
+
+/* Phone: drop the redundant oversized header call (tabbar has it), fit the
+   address pill on one line, and make the hero CTAs a clean equal-width stack. */
+@media (max-width: 859px) {
+  .nav .btn--fill { display: none; }
+  .pill { font-size: 0.55rem; letter-spacing: 0.07em; padding: 7px 14px; gap: 7px; }
+  .hero__cta { flex-direction: column; width: 100%; max-width: 300px; margin-inline: auto; gap: 10px; }
+  .hero__cta .btn { width: 100%; justify-content: center; }
+}
 
 /* ── Ticker (the orange band from the previous build) ──────── */
 .ticker {

@@ -32,7 +32,7 @@ export default function Play() {
         )}
         <a href={code ? `tokyotenders://pair?c=${code}` : "tokyotenders://"} style={S.primary}>Open the game 🎮</a>
         <a href={APP_STORE_URL} style={S.secondary}>Get the app</a>
-        <p style={S.small}>Already installed? Tap “Open the game.” New here? Get the app, then enter code <b>{code || "—"}</b> on the Order screen.</p>
+        <p style={S.small}>Already installed? Tap “Open the game.” New here? Get the app, then enter code <b>{code || "—"}</b> (or your ticket # from the receipt) on the Order screen.</p>
       </div>
     </main>
   );

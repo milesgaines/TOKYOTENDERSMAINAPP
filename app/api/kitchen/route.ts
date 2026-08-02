@@ -1,4 +1,5 @@
 import { listOpen, setOrderStatus, getOrder, createOrder, nextTicketNum, nextPairCode, rid, type Order } from "@/lib/orders";
+import { markReady } from "@/lib/ready";
 import { dispatchOrder } from "@/lib/notify";
 import { json, preflight, readJson } from "@/lib/http";
 
@@ -47,7 +48,8 @@ export async function POST(req: Request) {
   if (!body.id || !body.action) return json({ error: "bad request" }, 400);
   const o = await getOrder(body.id);
   if (!o) return json({ error: "not found" }, 404);
-  await setOrderStatus(body.id, body.action);
+  if (body.action === "ready") await markReady(body.id); // flips + pushes the buzz
+  else await setOrderStatus(body.id, body.action);
   return json({ ok: true, status: body.action });
 }
 

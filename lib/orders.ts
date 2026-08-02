@@ -28,6 +28,7 @@ export type Order = {
   readyToken: string;        // unguessable — the magic-link auth
   source: "toast" | "staff" | "square";
   externalId?: string | null; // Toast/Square order id, when integrated
+  deviceTokens?: string[];    // APNs device tokens to push the ready-buzz to (locked/backgrounded phones)
   createdAt: number;
   readyAt: number | null;
 };
@@ -76,10 +77,26 @@ export async function getOrderByPairCode(code: string): Promise<Order | undefine
   return id ? db.orders.get(id) : undefined;
 }
 
+/** Pair by the human ticket number printed on the Toast receipt (free, self-serve — no SMS). */
+export async function getOpenOrderByNum(num: number): Promise<Order | undefined> {
+  return [...db.orders.values()].find(
+    (o) => o.num === num && (o.status === "new" || o.status === "cooking" || o.status === "ready"),
+  );
+}
+
 /** Idempotency for external POS webhooks (Toast/Square order GUID). */
 export async function getOrderByExternalId(externalId: string): Promise<Order | undefined> {
   const id = db.ext.get(externalId);
   return id ? db.orders.get(id) : undefined;
+}
+
+/** Register an APNs device token so the ready-buzz can reach a locked/backgrounded phone. */
+export async function addDeviceToken(id: string, token: string): Promise<boolean> {
+  const o = db.orders.get(id);
+  if (!o) return false;
+  const t = (o.deviceTokens ??= []);
+  if (!t.includes(token)) t.push(token);
+  return true;
 }
 
 export async function listOpen(): Promise<Order[]> {

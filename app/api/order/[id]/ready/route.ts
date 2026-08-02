@@ -1,4 +1,5 @@
-import { getOrder, setOrderStatus } from "@/lib/orders";
+import { getOrder } from "@/lib/orders";
+import { markReady } from "@/lib/ready";
 import crypto from "node:crypto";
 
 export const runtime = "nodejs";
@@ -13,7 +14,7 @@ async function handle(req: Request, id: string) {
   const a = Buffer.from(token), b = Buffer.from(o.readyToken);
   if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) return page("Invalid link", "#b00", 403);
 
-  await setOrderStatus(id, "ready"); // idempotent one-shot
+  await markReady(id); // idempotent one-shot + push the buzz to registered devices
   return page(`Order #${o.num} marked READY ✓`, "#ff5500", 200, "The customer's pager is buzzing now.");
 }
 

@@ -1,4 +1,5 @@
-import { createOrder, getOrderByExternalId, setOrderStatus, nextTicketNum, nextPairCode, rid, type Order } from "@/lib/orders";
+import { createOrder, getOrderByExternalId, nextTicketNum, nextPairCode, rid, type Order } from "@/lib/orders";
+import { markReady } from "@/lib/ready";
 import { dispatchOrder } from "@/lib/notify";
 import { fetchToastOrder, verifyToastSignature, guestPhone, guestName, displayNumber, looksReady } from "@/lib/toast";
 
@@ -35,7 +36,7 @@ async function handleOrder(guid: string, event: any) {
   // Ready signal → buzz an order we're already tracking.
   if (existing && looksReady(event, order)) {
     if (existing.status !== "ready" && existing.status !== "collected") {
-      await setOrderStatus(existing.id, "ready");
+      await markReady(existing.id);
       console.log(`🔔 Toast → order #${existing.num} READY (buzz)`);
     }
     return;

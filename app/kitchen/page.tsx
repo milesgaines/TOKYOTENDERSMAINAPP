@@ -57,6 +57,14 @@ export default function Kitchen() {
     return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
   };
 
+  // Tap-to-send SMS from THIS device's own number (the restaurant's regular line) — no Twilio.
+  const smsLink = (o: Order) => {
+    const link = `${location.origin}/play?c=${o.pairCode}`;
+    const body = `🍗 Tokyo Tenders — order #${o.num} is cooking! Beat our egg game while you wait, we'll buzz you the second it's ready: ${link}`;
+    const to = (o.customerPhone || "").replace(/[^\d+]/g, "");
+    return `sms:${to}?&body=${encodeURIComponent(body)}`;
+  };
+
   if (!ready) {
     return (
       <main style={S.gate}>
@@ -107,7 +115,10 @@ export default function Kitchen() {
                 </ul>
                 {o.items.length === 0 && <div style={S.sub}>Order on Toast · pager only</div>}
                 {o.note && <div style={S.note}>📝 {o.note}</div>}
-                <div style={S.total}>code {o.pairCode}{o.customerPhone ? " · texted" : ""}</div>
+                <div style={S.total}>code {o.pairCode}</div>
+                {o.customerPhone && !isReady && (
+                  <a href={smsLink(o)} style={{ ...S.btn, background: "#2563eb", textDecoration: "none", textAlign: "center", display: "block" }}>📲 Text to play</a>
+                )}
                 {isReady ? (
                   <button onClick={() => act(o.id, "collected")} style={{ ...S.btn, background: "#166534" }}>PICKED UP ✓</button>
                 ) : (
