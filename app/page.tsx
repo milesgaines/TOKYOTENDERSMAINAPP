@@ -138,7 +138,7 @@ export default function Home() {
             <div className="sec__head reveal">
               <p className="eyebrow leaf">Choose your flavor</p>
               <h2 className="display sec__title">
-                Seven ways to <span>ruin</span> other tenders
+                Five ways to <span>ruin</span> other tenders
               </h2>
               <p className="sec__sub">
                 Every tender gets tossed to order. Pick one, pick three — the Deluxe exists for exactly this problem.
@@ -281,8 +281,8 @@ export default function Home() {
                 We don't just fry chicken. We craft <span>legends</span>.
               </h2>
               <p>
-                Born in the streets, made with love in {SHOP.city}. Yuzu, garlic soy, a Peking glaze that belongs on a
-                duck — the flavors we grew up chasing across the Valley, on the one thing everybody already agrees on.
+                Born in the streets, made with love in {SHOP.city}. Yuzu, garlic soy, a caramel drizzle that belongs
+                on a churro — the flavors we grew up chasing across the Valley, on the one thing everybody already agrees on.
               </p>
               <p>
                 Marinated 24 hours, tossed to order, 100% gluten-free. Come hungry. That part is not a slogan.
