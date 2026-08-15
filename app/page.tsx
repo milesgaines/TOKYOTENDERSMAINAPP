@@ -2,6 +2,7 @@ import Image from "next/image";
 import BackToTop from "./back-to-top";
 import FlavorPicker from "./flavor-picker";
 import Gallery from "./gallery";
+import HatchScene from "./hatch-scene";
 import Price from "./price";
 import ScrollFx from "./scroll-fx";
 import {
@@ -334,6 +335,7 @@ export default function Home() {
       </main>
 
       <footer className="foot">
+        <HatchScene />
         <p className="display foot__mark">
           Tokyo <span>Tenders</span>
         </p>
@@ -345,7 +347,7 @@ export default function Home() {
           <a href={`mailto:${SHOP.email}`}>{SHOP.email}</a>
         </p>
         <p className="foot__fine">
-          {SHOP.city}, {SHOP.state} {SHOP.zip} · {SHOP.since} · {SHOP.opening}
+          {SHOP.city}, {SHOP.state} {SHOP.zip} · {SHOP.opening}
         </p>
       </footer>
 

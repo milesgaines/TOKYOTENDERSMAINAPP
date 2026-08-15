@@ -835,3 +835,89 @@ a.vcard:hover { border-color: var(--orange); transform: translateY(-3px); box-sh
 }
 .tabbar a:active { color: var(--orange); }
 .tabbar svg { width: 21px; height: 21px; stroke: currentColor; fill: none; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ── Hatch scene — the animated "Hatched 2026" mama hen ───── */
+.hatch {
+  --chick: #ffd24a;
+  --chick-2: #f7b733;
+  --beak: #f08a00;
+  --straw-d: #cba24c;
+  --straw-l: #ecd9a8;
+  width: 100%;
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+.hatch__svg { width: min(340px, 84vw); height: auto; display: block; overflow: visible; }
+.hatch__cap { font-size: clamp(1.15rem, 4.6vw, 1.75rem); letter-spacing: 0.01em; margin-top: -4px; }
+.hatch__cap span { color: var(--orange); }
+.hatch__shadow { fill: rgba(28, 21, 18, 0.14); }
+.hatch__cup { fill: url(#hatch-egg); stroke: var(--edge-soft); stroke-width: 1; }
+.hatch__shell { fill: url(#hatch-egg); stroke: var(--edge-soft); stroke-width: 1; }
+.hatch__straw { stroke: var(--straw-d); stroke-width: 2; stroke-linecap: round; opacity: 0.7; }
+
+.hatch__body { transform-box: fill-box; transform-origin: 50% 100%; animation: hen-breathe 3.2s ease-in-out infinite; }
+.hatch__head { transform-box: fill-box; transform-origin: 26% 96%; animation: hen-cluck 4.6s ease-in-out infinite; }
+.hatch__wing { transform-box: fill-box; transform-origin: 30% 18%; animation: wing-flutter 2.7s ease-in-out infinite; }
+.hatch__eye  { transform-box: fill-box; transform-origin: 50% 50%; animation: hen-blink 4s ease-in-out infinite; }
+.hatch__hop  { transform-box: fill-box; transform-origin: 50% 100%; animation: chick-hop 1.6s ease-in-out infinite; }
+.hatch__wobble { transform-box: fill-box; transform-origin: 50% 92%; animation: egg-wobble 6s ease-in-out infinite; animation-delay: var(--delay); }
+.hatch__shell  { transform-box: fill-box; transform-origin: 18% 92%; animation: egg-cap 6s ease-in-out infinite; animation-delay: var(--delay); }
+.hatch__chick  { transform-box: fill-box; animation: egg-chick 6s ease-in-out infinite; animation-delay: var(--delay); }
+
+@keyframes hen-breathe {
+  0%, 100% { transform: scale(1, 1); }
+  50% { transform: scale(1.012, 1.035); }
+}
+@keyframes hen-cluck {
+  0%, 58%, 100% { transform: rotate(0deg); }
+  64% { transform: rotate(-5deg); }
+  70% { transform: rotate(2deg); }
+  76% { transform: rotate(-2deg); }
+  82% { transform: rotate(0deg); }
+}
+@keyframes wing-flutter {
+  0%, 68%, 100% { transform: rotate(0deg); }
+  76% { transform: rotate(-12deg); }
+  84% { transform: rotate(-3deg); }
+  92% { transform: rotate(-8deg); }
+}
+@keyframes hen-blink {
+  0%, 92%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.12); }
+}
+@keyframes chick-hop {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  40% { transform: translateY(-10px) rotate(-5deg); }
+  60% { transform: translateY(-10px) rotate(5deg); }
+  82% { transform: translateY(0) rotate(0deg); }
+}
+@keyframes egg-wobble {
+  0% { transform: rotate(0deg); }
+  3% { transform: rotate(-6deg); }
+  6% { transform: rotate(5deg); }
+  9% { transform: rotate(-4deg); }
+  12% { transform: rotate(3deg); }
+  15% { transform: rotate(-2deg); }
+  18%, 100% { transform: rotate(0deg); }
+}
+@keyframes egg-cap {
+  0%, 18% { transform: translateY(0) rotate(0deg); }
+  30% { transform: translateY(-15px) rotate(-18deg); }
+  72% { transform: translateY(-14px) rotate(-15deg); }
+  84%, 100% { transform: translateY(0) rotate(0deg); }
+}
+@keyframes egg-chick {
+  0%, 20% { transform: translateY(16px); }
+  32% { transform: translateY(-9px); }
+  38% { transform: translateY(-5px); }
+  44% { transform: translateY(-8px); }
+  50% { transform: translateY(-6px); }
+  72% { transform: translateY(-6px); }
+  84%, 100% { transform: translateY(16px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hatch__body, .hatch__head, .hatch__wing, .hatch__eye,
+  .hatch__hop, .hatch__wobble, .hatch__shell, .hatch__chick { animation: none; }
+}
